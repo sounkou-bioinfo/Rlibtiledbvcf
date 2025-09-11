@@ -8,8 +8,8 @@ echo "=== TileDB-VCF R Package Configuration (Windows) ==="
 MAKE=`"${R_HOME}/bin/R" CMD config MAKE`
 CC=`"${R_HOME}/bin/R" CMD config CC`
 CXX=`"${R_HOME}/bin/R" CMD config CXX`
-AR=`"${R_HOME}/bin/R" CMD config AR`
-RANLIB=`"${R_HOME}/bin/R" CMD config RANLIB`
+AR="x86_64-w64-mingw32-ar"
+RANLIB="x86_64-w64-mingw32-ranlib"
 R_CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
 
 # Extract base compiler from CC (remove flags)
