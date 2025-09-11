@@ -4,7 +4,7 @@
 \alias{tiledb_vcf_delete}
 \title{Delete Samples from TileDB-VCF Dataset}
 \usage{
-tiledb_vcf_delete(uri, sample_names, echo = TRUE)
+tiledb_vcf_delete(uri, sample_names, echo = TRUE, print_command = FALSE)
 }
 \arguments{
 \item{uri}{Character string specifying the dataset URI (required)}
@@ -12,6 +12,8 @@ tiledb_vcf_delete(uri, sample_names, echo = TRUE)
 \item{sample_names}{Character vector of sample names to delete (required)}
 
 \item{echo}{Logical, whether to echo output to console (default: TRUE)}
+
+\item{print_command}{Logical, whether to print the command being run (default: FALSE)}
 }
 \value{
 List with command execution results

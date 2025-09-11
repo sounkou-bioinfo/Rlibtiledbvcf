@@ -4,12 +4,14 @@
 \alias{tiledb_vcf_stat}
 \title{Get TileDB-VCF Dataset Statistics}
 \usage{
-tiledb_vcf_stat(uri, echo = TRUE)
+tiledb_vcf_stat(uri, echo = TRUE, print_command = FALSE)
 }
 \arguments{
 \item{uri}{Character string specifying the dataset URI (required)}
 
 \item{echo}{Logical, whether to echo output to console (default: TRUE)}
+
+\item{print_command}{Logical, whether to print the command being run (default: FALSE)}
 }
 \value{
 List with command execution results containing statistics

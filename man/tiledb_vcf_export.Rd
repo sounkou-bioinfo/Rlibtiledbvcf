@@ -17,6 +17,7 @@ tiledb_vcf_export(
   merge = FALSE,
   memory_budget_mb = 2048,
   echo = TRUE,
+  print_command = FALSE,
   ...
 )
 }
@@ -44,6 +45,8 @@ tiledb_vcf_export(
 \item{memory_budget_mb}{Integer, memory budget in MB (default: 2048)}
 
 \item{echo}{Logical, whether to echo output to console (default: TRUE)}
+
+\item{print_command}{Logical, whether to print the command being run (default: FALSE)}
 
 \item{...}{Additional arguments passed as --key=value pairs}
 }

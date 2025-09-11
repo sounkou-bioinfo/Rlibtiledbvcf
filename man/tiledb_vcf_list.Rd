@@ -4,12 +4,14 @@
 \alias{tiledb_vcf_list}
 \title{List Samples in TileDB-VCF Dataset}
 \usage{
-tiledb_vcf_list(uri, echo = FALSE)
+tiledb_vcf_list(uri, echo = FALSE, print_command = FALSE)
 }
 \arguments{
 \item{uri}{Character string specifying the dataset URI (required)}
 
 \item{echo}{Logical, whether to echo output to console (default: FALSE)}
+
+\item{print_command}{Logical, whether to print the command being run (default: FALSE)}
 }
 \value{
 Character vector of sample names
