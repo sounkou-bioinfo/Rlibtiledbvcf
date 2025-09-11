@@ -1,6 +1,6 @@
 ^LICENSE\.md$
-^src/libtiledbvcf/test/.*$
-^src/libtiledbvcf/test/.*$
+#^src/libtiledbvcf/test/.*$
+#^src/libtiledbvcf/test/.*$
 ^r-svn/.*$
 ^LICENSE\.md$
 ^Makefile$

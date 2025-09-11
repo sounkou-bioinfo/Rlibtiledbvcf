@@ -1,6 +1,3 @@
-#' @keywords internal
-"_PACKAGE"
-
 ## usethis namespace: start
 #' @useDynLib RTileDBvcf, .registration = TRUE
 ## usethis namespace: end
@@ -56,7 +53,6 @@ NULL
 #'   \item VCF Format: \url{https://samtools.github.io/hts-specs/VCFv4.3.pdf}
 #' }
 #'
-#' @docType package
-#' @name RTileDBvcf-package
+#' @name RTileDBvcf
 #' @aliases RTileDBvcf
 NULL
