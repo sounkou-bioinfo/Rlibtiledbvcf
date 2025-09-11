@@ -46,85 +46,28 @@ else
 fi
 
 # HTSLib configuration
-# Check for vcfppR package HTSLib first, then fallback options
-echo "Checking for HTSLib from vcfppR package..."
-
-# Try to get vcfppR HTSLib files directly
-HTSLIB_HEADER=""
-HTSLIB_LIB=""
-if [ -n "${R_HOME:-}" ]; then
-  echo "Looking for HTSLib header file..."
-  HTSLIB_HEADER=`"${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('include', 'htslib', 'hts.h', package='vcfppR'))" 2>/dev/null` || true
-  
-  echo "Looking for HTSLib library file..."
-  HTSLIB_LIB=`"${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('libs', 'libhts.a', package='vcfppR'))" 2>/dev/null` || true
-
-  # Find vcfppR libs directory
-  VCFPPR_LIBS=`"${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('libs', package='vcfppR'))" 2>/dev/null` || true
-  # Check for libhts.a existence in vcfppR libs
-  if [ -z "${VCFPPR_LIBS}" ] || [ ! -f "${VCFPPR_LIBS}/libhts.a" ]; then
-    echo "Error: vcfppR libhts.a not found in ${VCFPPR_LIBS}. Check vcfppR installation."
-    exit 1
-  fi
-
-  # Check for libhts.a existence
-  if [ -z "${HTSLIB_LIB}" ] || [ ! -f "${HTSLIB_LIB}" ]; then
-    echo "Error: vcfppR libhts.a not found. Check vcfppR installation."
-    exit 1
-  fi
-fi
-
-if [ -n "${HTSLIB_HEADER}" ] && [ "${HTSLIB_HEADER}" != "" ] && [ -f "${HTSLIB_HEADER}" ] && \
-   [ -n "${HTSLIB_LIB}" ] && [ "${HTSLIB_LIB}" != "" ] && [ -f "${HTSLIB_LIB}" ]; then
-  
-  # Extract directories from file paths
-  HTSLIB_INCLUDE_DIR=`dirname "${HTSLIB_HEADER}"`
-  HTSLIB_INCLUDE_DIR=`dirname "${HTSLIB_INCLUDE_DIR}"` # Remove 'htslib' from path
-  VCFPPR_PATH=`dirname "${HTSLIB_INCLUDE_DIR}"` # Get package root
-  
-  echo "Found HTSLib from vcfppR package:"
-  echo "  Header: ${HTSLIB_HEADER}"
-  echo "  Library: ${HTSLIB_LIB}"
-  echo "  Package: ${VCFPPR_PATH}"
-  
+# Only use external HTSLib or build as external project
+if [ -n "${HTSLIB_ROOT:-}" ]; then
+  echo "Using external HTSLib from: ${HTSLIB_ROOT}"
   FORCE_EXTERNAL_HTSLIB="OFF"
-  CMAKE_PREFIX_PATH="${VCFPPR_PATH}"
-  HTSLIB_CONFIG_MSG="Using HTSLib from vcfppR package"
-  HTSLIB_LIBRARIES="${HTSLIB_LIB}"
-else
-  echo "vcfppR HTSLib not found or incomplete"
+  CMAKE_PREFIX_PATH="${HTSLIB_ROOT}"
+  HTSLIB_CONFIG_MSG="External HTSLib at ${HTSLIB_ROOT}"
   HTSLIB_INCLUDE_DIR=""
   HTSLIB_LIBRARIES=""
-fi
-
-# Fallback options if vcfppR HTSLib not available
-if [ -z "${HTSLIB_LIBRARIES}" ]; then
-  # You can override these by setting environment variables:
-  # HTSLIB_ROOT=/path/to/htslib ./configure    (to use external htslib)
-  # FORCE_BUILD_HTSLIB=1 ./configure           (to force building htslib)
-  
-  if [ -n "${HTSLIB_ROOT:-}" ]; then
-    echo "Using external HTSLib from: ${HTSLIB_ROOT}"
-    FORCE_EXTERNAL_HTSLIB="OFF"
-    CMAKE_PREFIX_PATH="${HTSLIB_ROOT}"
-    HTSLIB_CONFIG_MSG="External HTSLib at ${HTSLIB_ROOT}"
-    HTSLIB_INCLUDE_DIR=""
-    HTSLIB_LIBRARIES=""
-  elif [ "${FORCE_BUILD_HTSLIB:-}" = "1" ]; then
-    echo "Forcing HTSLib build as external project"
-    FORCE_EXTERNAL_HTSLIB="ON"
-    CMAKE_PREFIX_PATH=""
-    HTSLIB_CONFIG_MSG="Building HTSLib as external project"
-    HTSLIB_INCLUDE_DIR=""
-    HTSLIB_LIBRARIES=""
-  else
-    echo "Using default HTSLib configuration (build as external project)"
-    FORCE_EXTERNAL_HTSLIB="ON"
-    CMAKE_PREFIX_PATH=""
-    HTSLIB_CONFIG_MSG="Building HTSLib as external project"
-    HTSLIB_INCLUDE_DIR=""
-    HTSLIB_LIBRARIES=""
-  fi
+elif [ "${FORCE_BUILD_HTSLIB:-}" = "1" ]; then
+  echo "Forcing HTSLib build as external project"
+  FORCE_EXTERNAL_HTSLIB="ON"
+  CMAKE_PREFIX_PATH=""
+  HTSLIB_CONFIG_MSG="Building HTSLib as external project"
+  HTSLIB_INCLUDE_DIR=""
+  HTSLIB_LIBRARIES=""
+else
+  echo "Using default HTSLib configuration (build as external project)"
+  FORCE_EXTERNAL_HTSLIB="ON"
+  CMAKE_PREFIX_PATH=""
+  HTSLIB_CONFIG_MSG="Building HTSLib as external project"
+  HTSLIB_INCLUDE_DIR=""
+  HTSLIB_LIBRARIES=""
 fi
 
 echo "Configuration:"
@@ -224,8 +167,7 @@ fi
 
 # Add specific HTSLib paths if using vcfppR
 if [ -n "${HTSLIB_INCLUDE_DIR}" ] && [ -n "${HTSLIB_LIBRARIES}" ]; then
-  CMAKE_CMD="${CMAKE_CMD} -DHTSLIB_INCLUDE_DIR=\"${HTSLIB_INCLUDE_DIR}\""
-  CMAKE_CMD="${CMAKE_CMD} -DHTSLIB_LIBRARIES=\"${HTSLIB_LIBRARIES}\""
+  CMAKE_CMD="${CMAKE_CMD} -DHTSLIB_INCLUDE_DIR:PATH=${HTSLIB_INCLUDE_DIR} -DHTSLIB_LIBRARIES:FILEPATH=${HTSLIB_LIBRARIES}"
 fi
 
 eval ${CMAKE_CMD} || {

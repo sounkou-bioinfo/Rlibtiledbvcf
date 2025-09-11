@@ -14,17 +14,13 @@ ifeq ($(wildcard $(TILEDBVCF_DIR)/lib/libtiledbvcf.so),)
 $(error TileDB-VCF libraries not found. Run ./configure first to build them.)
 endif
 
-# Check if vcfppR HTSLib exists
-ifeq ($(wildcard $(VCFPPR_LIBS)/libhts.a),)
-$(error vcfppR libhts.a not found. Check vcfppR installation.)
-endif
 
 PKG_CPPFLAGS = -I$(TILEDBVCF_DIR)/include -I$(VCFPPR_INCLUDE)
 PKG_CFLAGS = -fPIC -I$(TILEDBVCF_DIR)/include -I$(VCFPPR_INCLUDE)
 PKG_LIBS = -L$(TILEDBVCF_DIR)/lib \
   $(TILEDBVCF_DIR)/lib/libtiledbvcf.so $(TILEDBVCF_DIR)/lib/libtiledb.so.2.28 \
-  $(VCFPPR_LIBS)/libhts.a -Wl,-rpath,'$$ORIGIN' -Wl,-rpath,'$$ORIGIN/../TileDBVCF/lib' \
-  -lz -lm -lbz2 -llzma -lcurl -ldeflate 
+  $(TILEDBVCF_DIR)/lib/libhts.so.1.21 -Wl,-rpath,'$$ORIGIN' -Wl,-rpath,'$$ORIGIN/../TileDBVCF/lib' \
+  -lz -lm -lbz2 -llzma -lcurl -ldeflate
 
 all: $(SHLIB)
 
