@@ -58,6 +58,20 @@ if [ -n "${R_HOME:-}" ]; then
   
   echo "Looking for HTSLib library file..."
   HTSLIB_LIB=`"${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('libs', 'libhtslib.a', package='vcfppR'))" 2>/dev/null` || true
+
+  # Find vcfppR libs directory
+  VCFPPR_LIBS=`"${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('libs', package='vcfppR'))" 2>/dev/null` || true
+  # Check for libhts.a existence in vcfppR libs
+  if [ -z "${VCFPPR_LIBS}" ] || [ ! -f "${VCFPPR_LIBS}/libhts.a" ]; then
+    echo "Error: vcfppR libhts.a not found in ${VCFPPR_LIBS}. Check vcfppR installation."
+    exit 1
+  fi
+
+  # Check for libhts.a existence
+  if [ -z "${HTSLIB_LIB}" ] || [ ! -f "${HTSLIB_LIB}" ]; then
+    echo "Error: vcfppR libhts.a not found. Check vcfppR installation."
+    exit 1
+  fi
 fi
 
 if [ -n "${HTSLIB_HEADER}" ] && [ "${HTSLIB_HEADER}" != "" ] && [ -f "${HTSLIB_HEADER}" ] && \

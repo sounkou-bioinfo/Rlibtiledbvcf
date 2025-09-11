@@ -13,11 +13,7 @@ VCFPPR_LIBS := $(shell "${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('
 ifeq ($(wildcard $(TILEDBVCF_DIR)/lib/libtiledbvcf.so),)
 $(error TileDB-VCF libraries not found. Run ./configure first to build them.)
 endif
-# remove libtiledbvcf.a if it was installed
-# i will remove it from the the cmake file later
-ifneq ($(wildcard $(TILEDBVCF_DIR)/lib/libtiledbvcf.a),)
-	@rm -f $(TILEDBVCF_DIR)/lib/libtiledbvcf.a
-endif
+
 # Check if vcfppR HTSLib exists
 ifeq ($(wildcard $(VCFPPR_LIBS)/libhts.a),)
 $(error vcfppR libhts.a not found. Check vcfppR installation.)

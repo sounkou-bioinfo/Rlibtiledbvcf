@@ -624,7 +624,7 @@ configure:5598: $? = 0
 configure:5598: result: yes
 configure:5604: checking for srand48_deterministic
 configure:5604: gcc -std=gnu2x -o conftest  -fvisibility=hidden  -Wl,-soname,libhts.so.1.22.1 -fvisibility=hidden conftest.c  >&5
-/usr/bin/ld: /tmp/ccrqFwaJ.o: in function `main':
+/usr/bin/ld: /tmp/ccs0G7uv.o: in function `main':
 conftest.c:(.text+0x9): undefined reference to `srand48_deterministic'
 collect2: error: ld returned 1 exit status
 configure:5604: $? = 1
@@ -704,7 +704,7 @@ configure:5610: $? = 0
 configure:5610: result: yes
 configure:5616: checking for elf_aux_info
 configure:5616: gcc -std=gnu2x -o conftest  -fvisibility=hidden  -Wl,-soname,libhts.so.1.22.1 -fvisibility=hidden conftest.c  >&5
-/usr/bin/ld: /tmp/cckBSqPn.o: in function `main':
+/usr/bin/ld: /tmp/ccua0yoW.o: in function `main':
 conftest.c:(.text+0x9): undefined reference to `elf_aux_info'
 collect2: error: ld returned 1 exit status
 configure:5616: $? = 1
@@ -809,7 +809,7 @@ conftest.c:47:6: warning: conflicting types for built-in function 'log'; expecte
       |      ^~~
 conftest.c:1:1: note: 'log' is declared in header '<math.h>'
     1 | /* confdefs.h */
-/usr/bin/ld: /tmp/cc6o3nE4.o: in function `main':
+/usr/bin/ld: /tmp/ccR7QmVu.o: in function `main':
 conftest.c:(.text+0x9): undefined reference to `log'
 collect2: error: ld returned 1 exit status
 configure:5865: $? = 1
@@ -924,7 +924,7 @@ configure:6479: $? = 0
 configure:6489: result: yes
 configure:6625: checking for CCHmac
 configure:6625: gcc -std=gnu2x -o conftest  -fvisibility=hidden  -Wl,-soname,libhts.so.1.22.1 -fvisibility=hidden conftest.c -ldeflate -llzma -lbz2 -lz -lm  >&5
-/usr/bin/ld: /tmp/ccztha5a.o: in function `main':
+/usr/bin/ld: /tmp/ccc6WZ1B.o: in function `main':
 conftest.c:(.text+0x9): undefined reference to `CCHmac'
 collect2: error: ld returned 1 exit status
 configure:6625: $? = 1
@@ -1012,7 +1012,7 @@ configure: failed program was:
 configure:6625: result: no
 configure:6633: checking for library containing HMAC
 configure:6663: gcc -std=gnu2x -o conftest  -fvisibility=hidden  -Wl,-soname,libhts.so.1.22.1 -fvisibility=hidden conftest.c -ldeflate -llzma -lbz2 -lz -lm  >&5
-/usr/bin/ld: /tmp/ccJQIwFi.o: in function `main':
+/usr/bin/ld: /tmp/ccMd4aZz.o: in function `main':
 conftest.c:(.text+0x9): undefined reference to `HMAC'
 collect2: error: ld returned 1 exit status
 configure:6663: $? = 1
