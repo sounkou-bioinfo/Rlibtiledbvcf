@@ -315,9 +315,7 @@ endif()
 
 set_property(
   TARGET tiledbvcf-bin
-  PROPERTY INSTALL_RPATH
-    "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
-    "${CMAKE_INSTALL_PREFIX}/lib"
+  PROPERTY INSTALL_RPATH "$ORIGIN/../lib"
 )
 
 if (WIN32)

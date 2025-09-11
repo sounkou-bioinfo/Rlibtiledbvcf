@@ -101,5 +101,4 @@ if (all_identical) {
 
 
 ## References
-
 - [TileDB-VCF GitHub Repository](https://github.com/TileDB-Inc/TileDB-VCF)
