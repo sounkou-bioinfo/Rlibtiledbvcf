@@ -1,0 +1,30 @@
+#!/usr/bin/sh
+# Cleanup script for TileDB-VCF R package
+set -eux
+
+echo "=== Cleaning TileDB-VCF R Package Build Artifacts ==="
+
+# Remove build directories
+echo "Removing build directories..."
+rm -rf src/libtiledbvcf/build
+
+# Remove installation directory
+echo "Removing installation directory..."
+rm -rf inst/TileDBVCF
+
+# Remove downloaded sources (optional)
+if [ "${1:-}" = "--all" ]; then
+  echo "Removing downloaded sources..."
+  rm -rf src/libtiledbvcf
+  rm -f src/*.tar.gz
+fi
+
+echo "=== Cleanup completed ==="
+
+if [ "${1:-}" = "--all" ]; then
+  echo "All build artifacts and sources removed."
+  echo "Run ./getTileDBVCFSources.sh to re-download sources."
+else
+  echo "Build artifacts removed. Sources preserved."
+  echo "Use 'cleanup --all' to also remove downloaded sources."
+fi

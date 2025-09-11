@@ -1,0 +1,250 @@
+#!/usr/bin/sh
+# Build libtiledbvcf for R package
+# This uses the CMake build system with proper R configuration
+set -eux
+
+echo "=== TileDB-VCF R Package Configuration ==="
+
+# Get R configuration
+MAKE=`"${R_HOME}/bin/R" CMD config MAKE`
+CC=`"${R_HOME}/bin/R" CMD config CC`
+CXX=`"${R_HOME}/bin/R" CMD config CXX`
+AR=`"${R_HOME}/bin/R" CMD config AR`
+RANLIB=`"${R_HOME}/bin/R" CMD config RANLIB`
+R_CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
+
+# Extract base compiler from CC (remove flags)
+# Handle complex CC strings like "gcc -std=gnu2x" properly
+CC_BASE=`echo "${CC}" | awk '{print $1}'`
+CXX_BASE=`echo "${CXX}" | awk '{print $1}'`
+
+# Extract compiler flags from CC and CXX for CMake
+CC_FLAGS=`echo "${CC}" | awk '{for(i=2;i<=NF;i++) printf "%s ", $i}' | sed 's/ $//'`
+CXX_FLAGS=`echo "${CXX}" | awk '{for(i=2;i<=NF;i++) printf "%s ", $i}' | sed 's/ $//'`
+
+# Build configuration
+BUILD_TYPE="Release"
+BUILD_DIR="src/libtiledbvcf/build"
+INSTALL_DIR="${PWD}/inst/TileDBVCF"
+SOURCE_DIR="src/libtiledbvcf"
+
+# Additional flags for static builds and R compatibility
+CFLAGS="-g -O2 -fvisibility=hidden -fPIC -D_FILE_OFFSET_BITS=64"
+CXXFLAGS="${CFLAGS} -std=c++20"
+
+# Combine with R compiler flags and extracted flags from CC/CXX
+if [ -n "${CC_FLAGS}" ]; then
+  CMAKE_C_FLAGS="${CFLAGS} ${R_CFLAGS} ${CC_FLAGS}"
+else
+  CMAKE_C_FLAGS="${CFLAGS} ${R_CFLAGS}"
+fi
+
+if [ -n "${CXX_FLAGS}" ]; then
+  CMAKE_CXX_FLAGS="${CXXFLAGS} ${R_CFLAGS} ${CXX_FLAGS}"
+else
+  CMAKE_CXX_FLAGS="${CXXFLAGS} ${R_CFLAGS}"
+fi
+
+# HTSLib configuration
+# Check for vcfppR package HTSLib first, then fallback options
+echo "Checking for HTSLib from vcfppR package..."
+
+# Try to get vcfppR HTSLib files directly
+HTSLIB_HEADER=""
+HTSLIB_LIB=""
+if [ -n "${R_HOME:-}" ]; then
+  echo "Looking for HTSLib header file..."
+  HTSLIB_HEADER=`"${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('include', 'htslib', 'hts.h', package='vcfppR'))" 2>/dev/null` || true
+  
+  echo "Looking for HTSLib library file..."
+  HTSLIB_LIB=`"${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('libs', 'libhtslib.a', package='vcfppR'))" 2>/dev/null` || true
+fi
+
+if [ -n "${HTSLIB_HEADER}" ] && [ "${HTSLIB_HEADER}" != "" ] && [ -f "${HTSLIB_HEADER}" ] && \
+   [ -n "${HTSLIB_LIB}" ] && [ "${HTSLIB_LIB}" != "" ] && [ -f "${HTSLIB_LIB}" ]; then
+  
+  # Extract directories from file paths
+  HTSLIB_INCLUDE_DIR=`dirname "${HTSLIB_HEADER}"`
+  HTSLIB_INCLUDE_DIR=`dirname "${HTSLIB_INCLUDE_DIR}"` # Remove 'htslib' from path
+  VCFPPR_PATH=`dirname "${HTSLIB_INCLUDE_DIR}"` # Get package root
+  
+  echo "Found HTSLib from vcfppR package:"
+  echo "  Header: ${HTSLIB_HEADER}"
+  echo "  Library: ${HTSLIB_LIB}"
+  echo "  Package: ${VCFPPR_PATH}"
+  
+  FORCE_EXTERNAL_HTSLIB="OFF"
+  CMAKE_PREFIX_PATH="${VCFPPR_PATH}"
+  HTSLIB_CONFIG_MSG="Using HTSLib from vcfppR package"
+  HTSLIB_LIBRARIES="${HTSLIB_LIB}"
+else
+  echo "vcfppR HTSLib not found or incomplete"
+  HTSLIB_INCLUDE_DIR=""
+  HTSLIB_LIBRARIES=""
+fi
+
+# Fallback options if vcfppR HTSLib not available
+if [ -z "${HTSLIB_LIBRARIES}" ]; then
+  # You can override these by setting environment variables:
+  # HTSLIB_ROOT=/path/to/htslib ./configure    (to use external htslib)
+  # FORCE_BUILD_HTSLIB=1 ./configure           (to force building htslib)
+  
+  if [ -n "${HTSLIB_ROOT:-}" ]; then
+    echo "Using external HTSLib from: ${HTSLIB_ROOT}"
+    FORCE_EXTERNAL_HTSLIB="OFF"
+    CMAKE_PREFIX_PATH="${HTSLIB_ROOT}"
+    HTSLIB_CONFIG_MSG="External HTSLib at ${HTSLIB_ROOT}"
+    HTSLIB_INCLUDE_DIR=""
+    HTSLIB_LIBRARIES=""
+  elif [ "${FORCE_BUILD_HTSLIB:-}" = "1" ]; then
+    echo "Forcing HTSLib build as external project"
+    FORCE_EXTERNAL_HTSLIB="ON"
+    CMAKE_PREFIX_PATH=""
+    HTSLIB_CONFIG_MSG="Building HTSLib as external project"
+    HTSLIB_INCLUDE_DIR=""
+    HTSLIB_LIBRARIES=""
+  else
+    echo "Using default HTSLib configuration (build as external project)"
+    FORCE_EXTERNAL_HTSLIB="ON"
+    CMAKE_PREFIX_PATH=""
+    HTSLIB_CONFIG_MSG="Building HTSLib as external project"
+    HTSLIB_INCLUDE_DIR=""
+    HTSLIB_LIBRARIES=""
+  fi
+fi
+
+echo "Configuration:"
+echo "  CC: ${CC_BASE}"
+echo "  CXX: ${CXX_BASE}"
+echo "  AR: ${AR}"
+echo "  Install dir: ${INSTALL_DIR}"
+echo "  Build type: ${BUILD_TYPE}"
+echo "  HTSLib: ${HTSLIB_CONFIG_MSG}"
+echo ""
+echo "=== Detailed Configuration ==="
+echo "R Configuration:"
+echo "  R_HOME: ${R_HOME:-'not set'}"
+echo "  MAKE: ${MAKE}"
+echo "  CC (full): ${CC}"
+echo "  CXX (full): ${CXX}"
+echo "  AR: ${AR}"
+echo "  RANLIB: ${RANLIB}"
+echo "  R_CFLAGS: ${R_CFLAGS}"
+echo ""
+echo "Build Settings:"
+echo "  CC_BASE: ${CC_BASE}"
+echo "  CXX_BASE: ${CXX_BASE}"
+echo "  CC_FLAGS: ${CC_FLAGS:-'none'}"
+echo "  CXX_FLAGS: ${CXX_FLAGS:-'none'}"
+echo "  CFLAGS: ${CFLAGS}"
+echo "  CXXFLAGS: ${CXXFLAGS}"
+echo "  CMAKE_C_FLAGS: ${CMAKE_C_FLAGS}"
+echo "  CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}"
+echo "  BUILD_TYPE: ${BUILD_TYPE}"
+echo "  BUILD_DIR: ${BUILD_DIR}"
+echo "  SOURCE_DIR: ${SOURCE_DIR}"
+echo "  INSTALL_DIR: ${INSTALL_DIR}"
+
+echo ""
+echo "HTSLib Configuration:"
+echo "  FORCE_EXTERNAL_HTSLIB: ${FORCE_EXTERNAL_HTSLIB}"
+echo "  CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH:-'not set'}"
+echo "  HTSLIB_INCLUDE_DIR: ${HTSLIB_INCLUDE_DIR:-'not set'}"
+echo "  HTSLIB_LIBRARIES: ${HTSLIB_LIBRARIES:-'not set'}"
+if [ -n "${HTSLIB_HEADER:-}" ]; then
+  echo "  HTSLIB_HEADER: ${HTSLIB_HEADER}"
+fi
+if [ -n "${HTSLIB_LIB:-}" ]; then
+  echo "  HTSLIB_LIB: ${HTSLIB_LIB}"
+fi
+echo ""
+echo "Environment Variables:"
+echo "  HTSLIB_ROOT: ${HTSLIB_ROOT:-'not set'}"
+echo "  FORCE_BUILD_HTSLIB: ${FORCE_BUILD_HTSLIB:-'not set'}"
+
+# Check if sources are available
+if [ ! -d "${SOURCE_DIR}" ]; then
+  echo "libtiledbvcf sources not found in ${SOURCE_DIR}"
+  echo "Please run ./getTileDBVCFSources.sh first to download and extract sources"
+  exit 1
+fi
+
+# Check cmake
+if ! command -v cmake >/dev/null 2>&1; then
+  echo "cmake not found, please install cmake"
+  exit 1
+fi
+
+# Clean previous builds
+echo "Cleaning previous builds..."
+rm -rf "${BUILD_DIR}" "${INSTALL_DIR}"
+
+# Create build directory
+mkdir -p "${BUILD_DIR}"
+cd "${BUILD_DIR}"
+
+echo "Configuring with CMake..."
+
+# Build cmake command
+CMAKE_CMD="cmake .. \
+  -DCMAKE_BUILD_TYPE=\"${BUILD_TYPE}\" \
+  -DCMAKE_C_COMPILER=\"${CC_BASE}\" \
+  -DCMAKE_CXX_COMPILER=\"${CXX_BASE}\" \
+  -DCMAKE_AR=\"${AR}\" \
+  -DCMAKE_RANLIB=\"${RANLIB}\" \
+  -DCMAKE_C_FLAGS=\"${CMAKE_C_FLAGS}\" \
+  -DCMAKE_CXX_FLAGS=\"${CMAKE_CXX_FLAGS}\" \
+  -DCMAKE_INSTALL_PREFIX=\"${INSTALL_DIR}\" \
+  -DFORCE_EXTERNAL_HTSLIB=${FORCE_EXTERNAL_HTSLIB} \
+  -DFORCE_EXTERNAL_SPDLOG=ON \
+  -DFORCE_EXTERNAL_TILEDB=OFF \
+  -DTILEDB_S3=ON \
+  -DTILEDB_WERROR=OFF \
+  -DOVERRIDE_INSTALL_PREFIX=OFF \
+  -DCMAKE_POSITION_INDEPENDENT_CODE=ON"
+
+# Add CMAKE_PREFIX_PATH if specified
+if [ -n "${CMAKE_PREFIX_PATH}" ]; then
+  CMAKE_CMD="${CMAKE_CMD} -DCMAKE_PREFIX_PATH=\"${CMAKE_PREFIX_PATH}\""
+fi
+
+# Add specific HTSLib paths if using vcfppR
+if [ -n "${HTSLIB_INCLUDE_DIR}" ] && [ -n "${HTSLIB_LIBRARIES}" ]; then
+  CMAKE_CMD="${CMAKE_CMD} -DHTSLIB_INCLUDE_DIR=\"${HTSLIB_INCLUDE_DIR}\""
+  CMAKE_CMD="${CMAKE_CMD} -DHTSLIB_LIBRARIES=\"${HTSLIB_LIBRARIES}\""
+fi
+
+eval ${CMAKE_CMD} || {
+  echo "CMake configuration failed"
+  exit 1
+}
+
+echo "Building..."
+${MAKE} -j || {
+  echo "Build failed"
+  exit 1
+}
+
+echo "Installing..."
+${MAKE} install-libtiledbvcf || {
+  echo "Installation failed"
+  exit 1
+}
+
+cd "${PWD}"
+
+echo ""
+echo "=== Build completed successfully ==="
+echo "Libraries installed to: ${INSTALL_DIR}"
+
+# Verify installation
+if [ -d "${INSTALL_DIR}/lib" ]; then
+  echo "Library files:"
+  ls -la "${INSTALL_DIR}/lib/"
+fi
+
+if [ -d "${INSTALL_DIR}/include" ]; then
+  echo "Header files found in: ${INSTALL_DIR}/include/"
+fi
+
+echo "=== Configuration completed successfully ==="
