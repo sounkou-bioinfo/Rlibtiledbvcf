@@ -9,7 +9,8 @@ run_tiledb_vcf_cli(
   timeout = 60,
   echo = FALSE,
   error_on_status = TRUE,
-  wd = "."
+  wd = ".",
+  print_command = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ run_tiledb_vcf_cli(
 \item{error_on_status}{Logical, whether to throw error on non-zero exit (default: TRUE)}
 
 \item{wd}{Working directory (default: current directory)}
+
+\item{print_command}{Logical, whether to print the command being run (default: FALSE)}
 }
 \value{
 List with components:

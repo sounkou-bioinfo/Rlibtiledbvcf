@@ -13,6 +13,7 @@ tiledb_vcf_store(
   sample_batch_size = 10,
   scratch_dir = NULL,
   echo = TRUE,
+  print_command = FALSE,
   ...
 )
 }
@@ -32,6 +33,8 @@ tiledb_vcf_store(
 \item{scratch_dir}{Character string, directory for temporary files}
 
 \item{echo}{Logical, whether to echo output to console (default: TRUE)}
+
+\item{print_command}{Logical, whether to print the command being run (default: FALSE)}
 
 \item{...}{Additional arguments passed as --key=value pairs}
 }

@@ -13,6 +13,7 @@ tiledb_vcf_create(
   tile_capacity = 10000,
   checksum = "sha256",
   echo = FALSE,
+  print_command = FALSE,
   ...
 )
 }
@@ -32,6 +33,8 @@ tiledb_vcf_create(
 \item{checksum}{Character string, checksum type: "md5", "sha256", or "none" (default: "sha256")}
 
 \item{echo}{Logical, whether to echo output to console (default: FALSE)}
+
+\item{print_command}{Logical, whether to print the command being run (default: FALSE)}
 
 \item{...}{Additional arguments passed as --key=value pairs}
 }

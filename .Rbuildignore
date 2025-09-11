@@ -32,3 +32,4 @@ DONTCHECKMEIN.R
 ^.*\.\.Rcheck.*$
 ^Makefile$
 ^getTileDBVCFSources.sh$
+^src/libtiledbvcf/test/inputs/.*$
