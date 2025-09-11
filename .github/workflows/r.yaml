@@ -34,7 +34,10 @@ jobs:
     steps:
       
       - uses: actions/checkout@v4
-  
+
+      - name: Install Autotools (macOS only)
+        if: runner.os == 'macOS'
+        run: brew install autoconf automake libtool
 
       - uses: r-lib/actions/setup-pandoc@v2
 
