@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/bin/sh
 # Build libtiledbvcf for R package
 # This uses the CMake build system with proper R configuration
 set -eux
