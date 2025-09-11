@@ -13,8 +13,8 @@ LinkingTo:
 Imports: 
     processx,
     vcfppR
-SystemRequirements: GNU make, cmake, wget (or curl), libcurl, libdeflate, libcrypto
-OS_type: unix
+SystemRequirements: GNU make, cmake, libcurl, libdeflate, libcrypto, 
+    libssl, zlib, libbz2, liblzma, libhts (htslib), libtiledb (TileDB)
 Suggests:
     tinytest,
     litedown

@@ -1,0 +1,6 @@
+#!/bin/sh
+# Windows cleanup script for RTileDBvcf
+# Remove build artifacts specific to Windows
+rm -rf src/libtiledbvcf/build
+rm -rf inst/TileDBVCF
+exit 0

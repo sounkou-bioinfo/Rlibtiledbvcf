@@ -1,0 +1,5 @@
+# Windows Makevars for RTileDBvcf
+CXX_STD = CXX20
+PKG_CPPFLAGS = -I"$(CURDIR)/../inst/TileDBVCF/include"
+PKG_CXXFLAGS = -O2 -Wall
+PKG_LIBS = -L"$(CURDIR)/../inst/TileDBVCF/lib" -ltiledbvcf -ltiledb -lhts -lz -lm -lbz2 -llzma -lcurl -ldeflate

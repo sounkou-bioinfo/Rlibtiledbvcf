@@ -1,3 +1,108 @@
-#!/usr/bin/sh
-# noop
+#!/bin/sh
+# Windows build for libtiledbvcf R package
+set -eux
+
+echo "=== TileDB-VCF R Package Configuration (Windows) ==="
+
+# Get R configuration
+MAKE=`"${R_HOME}/bin/R" CMD config MAKE`
+CC=`"${R_HOME}/bin/R" CMD config CC`
+CXX=`"${R_HOME}/bin/R" CMD config CXX`
+AR=`"${R_HOME}/bin/R" CMD config AR`
+RANLIB=`"${R_HOME}/bin/R" CMD config RANLIB`
+R_CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
+
+# Extract base compiler from CC (remove flags)
+CC_BASE=`echo "${CC}" | awk '{print $1}'`
+CXX_BASE=`echo "${CXX}" | awk '{print $1}'`
+
+# Extract compiler flags from CC and CXX for CMake
+CC_FLAGS=`echo "${CC}" | awk '{for(i=2;i<=NF;i++) printf "%s ", $i}' | sed 's/ $//'`
+CXX_FLAGS=`echo "${CXX}" | awk '{for(i=2;i<=NF;i++) printf "%s ", $i}' | sed 's/ $//'`
+
+# Build configuration
+BUILD_TYPE="Release"
+BUILD_DIR="src/libtiledbvcf/build"
+INSTALL_DIR="${PWD}/inst/TileDBVCF"
+SOURCE_DIR="src/libtiledbvcf"
+
+# Additional flags for static builds and R compatibility
+CFLAGS="-O2 -D_FILE_OFFSET_BITS=64"
+CXXFLAGS="${CFLAGS} -std=c++20"
+
+# Combine with R compiler flags and extracted flags from CC/CXX
+if [ -n "${CC_FLAGS}" ]; then
+  CMAKE_C_FLAGS="${CFLAGS} ${R_CFLAGS} ${CC_FLAGS}"
+else
+  CMAKE_C_FLAGS="${CFLAGS} ${R_CFLAGS}"
+fi
+
+if [ -n "${CXX_FLAGS}" ]; then
+  CMAKE_CXX_FLAGS="${CXXFLAGS} ${R_CFLAGS} ${CXX_FLAGS}"
+else
+  CMAKE_CXX_FLAGS="${CXXFLAGS} ${R_CFLAGS}"
+fi
+
+# HTSLib configuration (Windows: usually external)
+FORCE_EXTERNAL_HTSLIB="OFF"
+CMAKE_PREFIX_PATH="${HTSLIB_ROOT:-}" # Set HTSLIB_ROOT if available
+
+# Check if sources are available
+if [ ! -d "${SOURCE_DIR}" ]; then
+  echo "libtiledbvcf sources not found in ${SOURCE_DIR}"
+  exit 1
+fi
+
+# Check cmake
+if ! command -v cmake >/dev/null 2>&1; then
+  echo "cmake not found, please install cmake"
+  exit 1
+fi
+
+# Clean previous builds
+rm -rf "${BUILD_DIR}" "${INSTALL_DIR}"
+
+# Create build directory
+mkdir -p "${BUILD_DIR}"
+cd "${BUILD_DIR}"
+
+echo "Configuring with CMake..."
+CMAKE_CMD="cmake .. \
+  -DCMAKE_BUILD_TYPE=\"${BUILD_TYPE}\" \
+  -DCMAKE_C_COMPILER=\"${CC_BASE}\" \
+  -DCMAKE_CXX_COMPILER=\"${CXX_BASE}\" \
+  -DCMAKE_AR=\"${AR}\" \
+  -DCMAKE_RANLIB=\"${RANLIB}\" \
+  -DCMAKE_C_FLAGS=\"${CMAKE_C_FLAGS}\" \
+  -DCMAKE_CXX_FLAGS=\"${CMAKE_CXX_FLAGS}\" \
+  -DCMAKE_INSTALL_PREFIX=\"${INSTALL_DIR}\" \
+  -DFORCE_EXTERNAL_HTSLIB=${FORCE_EXTERNAL_HTSLIB} \
+  -DFORCE_EXTERNAL_SPDLOG=ON \
+  -DFORCE_EXTERNAL_TILEDB=OFF \
+  -DTILEDB_S3=ON \
+  -DTILEDB_WERROR=OFF \
+  -DOVERRIDE_INSTALL_PREFIX=OFF \
+  -DCMAKE_POSITION_INDEPENDENT_CODE=ON"
+
+if [ -n "${CMAKE_PREFIX_PATH}" ]; then
+  CMAKE_CMD="${CMAKE_CMD} -DCMAKE_PREFIX_PATH=\"${CMAKE_PREFIX_PATH}\""
+fi
+
+eval ${CMAKE_CMD} || {
+  echo "CMake configuration failed"
+  exit 1
+}
+
+${MAKE} -j || {
+  echo "Build failed"
+  exit 1
+}
+
+${MAKE} install-libtiledbvcf || {
+  echo "Installation failed"
+  exit 1
+}
+
+cd "${PWD}"
+echo "=== Build completed successfully ==="
 exit 0
