@@ -10,10 +10,14 @@ VCFPPR_INCLUDE := $(shell "${R_HOME}/bin/R" --slave --vanilla -e "cat(system.fil
 VCFPPR_LIBS := $(shell "${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('libs', package='vcfppR'))")
 
 # Check if TileDB-VCF libraries exist
-ifeq ($(wildcard $(TILEDBVCF_DIR)/lib/libtiledbvcf.a),)
+ifeq ($(wildcard $(TILEDBVCF_DIR)/lib/libtiledbvcf.so),)
 $(error TileDB-VCF libraries not found. Run ./configure first to build them.)
 endif
-
+# remove libtiledbvcf.a if it was installed
+# i will remove it from the the cmake file later
+ifneq ($(wildcard $(TILEDBVCF_DIR)/lib/libtiledbvcf.a),)
+	@rm -f $(TILEDBVCF_DIR)/lib/libtiledbvcf.a
+endif
 # Check if vcfppR HTSLib exists
 ifeq ($(wildcard $(VCFPPR_LIBS)/libhts.a),)
 $(error vcfppR libhts.a not found. Check vcfppR installation.)
@@ -22,7 +26,7 @@ endif
 PKG_CPPFLAGS = -I$(TILEDBVCF_DIR)/include -I$(VCFPPR_INCLUDE)
 PKG_CFLAGS = -fPIC -I$(TILEDBVCF_DIR)/include -I$(VCFPPR_INCLUDE)
 PKG_LIBS = -L$(TILEDBVCF_DIR)/lib \
-  $(TILEDBVCF_DIR)/lib/libtiledbvcf.a $(TILEDBVCF_DIR)/lib/libtiledb.so.2.28 \
+  $(TILEDBVCF_DIR)/lib/libtiledbvcf.so $(TILEDBVCF_DIR)/lib/libtiledb.so.2.28 \
   $(VCFPPR_LIBS)/libhts.a -Wl,-rpath,'$$ORIGIN' -Wl,-rpath,'$$ORIGIN/../TileDBVCF/lib' \
   -lz -lm -lbz2 -llzma -lcurl -ldeflate 
 
