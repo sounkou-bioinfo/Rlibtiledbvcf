@@ -7,7 +7,7 @@
 #' @examples
 #' tiledb_vcf_version()
 tiledb_vcf_version <- function() {
-    .Call(RC_tiledb_vcf_version, PACKAGE = "RTileDBvcf")
+  .Call(RC_tiledb_vcf_version, PACKAGE = "RTileDBvcf")
 }
 
 #' Check TileDB-VCF Availability
@@ -19,5 +19,5 @@ tiledb_vcf_version <- function() {
 #' @examples
 #' tiledb_vcf_available()
 tiledb_vcf_available <- function() {
-    .Call(RC_tiledb_vcf_available, PACKAGE = "RTileDBvcf")
+  .Call(RC_tiledb_vcf_available, PACKAGE = "RTileDBvcf")
 }
