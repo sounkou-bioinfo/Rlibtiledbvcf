@@ -57,7 +57,7 @@ if [ -n "${R_HOME:-}" ]; then
   HTSLIB_HEADER=`"${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('include', 'htslib', 'hts.h', package='vcfppR'))" 2>/dev/null` || true
   
   echo "Looking for HTSLib library file..."
-  HTSLIB_LIB=`"${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('libs', 'libhtslib.a', package='vcfppR'))" 2>/dev/null` || true
+  HTSLIB_LIB=`"${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('libs', 'libhts.a', package='vcfppR'))" 2>/dev/null` || true
 
   # Find vcfppR libs directory
   VCFPPR_LIBS=`"${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('libs', package='vcfppR'))" 2>/dev/null` || true
