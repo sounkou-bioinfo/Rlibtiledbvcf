@@ -8,7 +8,7 @@ Description: Provides R bindings to the TileDB-VCF library for efficient storage
     engine to enable high-performance compression, parallel processing, and 
     cloud-native capabilities for VCF (Variant Call Format) files.
 License: MIT
-LikingTo:
+LinkingTo:
     vcfppR
 Imports: 
     processx,
