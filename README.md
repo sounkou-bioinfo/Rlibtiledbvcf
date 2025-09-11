@@ -13,13 +13,13 @@ building complete bindings to the TileDB VCF API and it’s HTSlib plugin.
 library(RTileDBvcf)
 library(vcfppR)
 tiledb_vcf_cli_version() |> cat(sep = "\n")
-#> TileDB-VCF version 50e78a5
+#> TileDB-VCF version 
 #> TileDB version 2.28.1
 #> htslib version 1.22.1
 tiledb_vcf_version() |> cat(sep = "\n")
 #> TileDB-VCF version 
 #> TileDB version 2.28.1
-#> htslib version 1.21
+#> htslib version 1.22.1
 ```
 
 ## Creating a TileDB-VCF Dataset
@@ -33,7 +33,7 @@ tiledb_vcf_create(uri, print_command = TRUE)
 #> /usr/local/lib/R/site-library/RTileDBvcf/TileDBVCF/bin/tiledbvcf 
 #>    create 
 #>    --uri 
-#>    /tmp/Rtmpz2AlcX/my_dataset 
+#>    /tmp/RtmpPwRaPq/my_dataset 
 #>    --anchor-gap 
 #>    1000 
 #>    --tile-capacity 
@@ -81,9 +81,9 @@ tiledb_vcf_store(
 #> /usr/local/lib/R/site-library/RTileDBvcf/TileDBVCF/bin/tiledbvcf 
 #>    store 
 #>    --uri 
-#>    /tmp/Rtmpz2AlcX/my_dataset 
+#>    /tmp/RtmpPwRaPq/my_dataset 
 #>    --samples-file 
-#>    /tmp/Rtmpz2AlcX/file14900b6751da76.txt 
+#>    /tmp/RtmpPwRaPq/file16086c2e2569c7.txt 
 #>    --threads 
 #>    4 
 #>    --total-memory-budget-mb 
