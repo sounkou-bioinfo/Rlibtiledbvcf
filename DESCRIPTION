@@ -17,7 +17,7 @@ LinkingTo:
 Imports: 
     vcfppR,
     processx
-SystemRequirements: cmake, wget (or curl)
+SystemRequirements: cmake, wget (or curl), libcurl, libdeflate, libcrypto
 OS_type: unix
 Suggests: 
     tinytest,
