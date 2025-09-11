@@ -12,6 +12,14 @@ AR="x86_64-w64-mingw32-ar"
 RANLIB="x86_64-w64-mingw32-ranlib"
 R_CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
 
+# Fallback if MinGW-w64 tools are not found
+if ! command -v ${AR} >/dev/null 2>&1; then
+  AR="ar"
+fi
+if ! command -v ${RANLIB} >/dev/null 2>&1; then
+  RANLIB="ranlib"
+fi
+
 # Extract base compiler from CC (remove flags)
 CC_BASE=`echo "${CC}" | awk '{print $1}'`
 CXX_BASE=`echo "${CXX}" | awk '{print $1}'`

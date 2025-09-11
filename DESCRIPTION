@@ -18,7 +18,6 @@ SystemRequirements: GNU make, cmake, autoreconf, libcurl, libdeflate, libcrypto,
 Suggests:
     tinytest,
     litedown
-OS_type: unix
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
