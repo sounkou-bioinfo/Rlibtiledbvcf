@@ -22,4 +22,3 @@ OS_type: unix
 Suggests: 
     tinytest,
     tiledb
-VignetteBuilder: knitr
