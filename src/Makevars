@@ -2,7 +2,7 @@
 # Use absolute paths since configure step is skipped
 
 # Get absolute path to package directory
-PKG_ROOT := ..
+PKG_ROOT := $(CURDIR)/..
 TILEDBVCF_DIR := $(PKG_ROOT)/inst/TileDBVCF
 OBJS = src/RC_TileDBvcf.o
 # Get vcfppR HTSLib paths
