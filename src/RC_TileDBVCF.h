@@ -1,5 +1,5 @@
 /**
- * @file RTileDBVCF.h
+ * @file Rlibtiledbvcf.h
  * @brief R bindings for TileDB-VCF
  * 
  * This file declares the R API functions for TileDB-VCF operations.
@@ -96,7 +96,7 @@ SEXP _rtiledbvcf_handle_general_error(const char* function_name, const char* cus
 #define RTILEDBVCF_CHECK_NULL(ptr, message) \
     do { \
         if ((ptr) == NULL) { \
-            Rf_error("RTileDBVCF: %s", (message)); \
+            Rf_error("Rlibtiledbvcf: %s", (message)); \
         } \
     } while(0)
 

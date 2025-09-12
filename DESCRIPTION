@@ -1,20 +1,17 @@
-Package: RTileDBvcf
-Title: R Interface to TileDB-VCF
+Package: Rlibtiledbvcf
+Title: `libtiledbvcf` and TileDB-VCF CLI For R
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Sounkou Mahamane", family = "Toure", email = "sounkalo.koutoure@example.com", role = c("aut", "cre"))
-Description: Provides R bindings to the TileDB-VCF library for efficient storage 
-    and querying of genomic variant data. TileDB-VCF leverages the TileDB storage 
-    engine to enable high-performance compression, parallel processing, and 
+Description: Provides libtiledbvcf and TileDB-VCF CLI for R Package usage. TileDB-VCF leverages the TileDB storage
+    engine to enable high-performance compression, parallel processing, and
     cloud-native capabilities for VCF (Variant Call Format) files.
-License: MIT
-LinkingTo:
-    vcfppR
+License: MIT    
 Imports: 
     processx,
     vcfppR
 SystemRequirements: GNU make, cmake, autoreconf, libcurl, libdeflate, libcrypto, 
-    libssl, zlib, libbz2, liblzma, libhts (htslib), libtiledb (TileDB)
+    libssl, zlib, libbz2, liblzma
 Suggests:
     tinytest,
     litedown

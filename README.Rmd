@@ -10,16 +10,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-# RTileDBvcf
+# libtiledbvcf and TileDB-VCF CLI For R
 
 Minimal R bindings and CLI wrapper for [TileDB-VCF](https://github.com/TileDB-Inc/TileDB-VCF).
 
-We build the CLI and the library, provide a CLI wrapper, and begin building complete bindings to the TileDB VCF API and it's HTSlib plugin.
+We build the CLI and the library, provide a CLI wrapper. CLI is used for creating, ingesting, exporting, and querying TileDB-VCF datasets and library will be used for future R bindings.
 
 ##  Setup and Version Checking
 
 ```{r, eval = TRUE}
-library(RTileDBvcf)
+library(Rlibtiledbvcf)
 library(vcfppR)
 tiledb_vcf_cli_version() |> cat(sep = "\n")
 tiledb_vcf_version() |> cat(sep = "\n")

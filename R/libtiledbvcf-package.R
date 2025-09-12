@@ -1,9 +1,9 @@
 ## usethis namespace: start
-#' @useDynLib RTileDBvcf, .registration = TRUE
+#' @useDynLib Rlibtiledbvcf, .registration = TRUE
 ## usethis namespace: end
 NULL
 
-#' RTileDBvcf: R Interface to TileDB-VCF
+#' Rlibtiledbvcf: R Interface to TileDB-VCF
 #'
 #' @description
 #' The RTileDBvcf package provides an R interface to the TileDB-VCF library,

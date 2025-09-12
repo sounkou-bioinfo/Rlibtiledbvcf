@@ -1,5 +1,5 @@
 /**
- * @file RTileDBVCF.c
+ * @file Rlibtiledbvcf.c
  * @brief R bindings for TileDB-VCF - Main implementation
  */
 
@@ -19,7 +19,7 @@ SEXP _rtiledbvcf_handle_reader_error(tiledb_vcf_reader_t* reader, const char* fu
         }
     }
     
-    Rf_error("RTileDBVCF reader error in %s: %s", function_name, err_msg);
+    Rf_error("Rlibtiledbvcf reader error in %s: %s", function_name, err_msg);
     return R_NilValue; /* Never reached, but keeps compiler happy */
 }
 
@@ -33,12 +33,12 @@ SEXP _rtiledbvcf_handle_writer_error(tiledb_vcf_writer_t* writer, const char* fu
         }
     }
     
-    Rf_error("RTileDBVCF writer error in %s: %s", function_name, err_msg);
+    Rf_error("Rlibtiledbvcf writer error in %s: %s", function_name, err_msg);
     return R_NilValue; /* Never reached, but keeps compiler happy */
 }
 
 SEXP _rtiledbvcf_handle_general_error(const char* function_name, const char* custom_message) {
-    Rf_error("RTileDBVCF error in %s: %s", function_name, custom_message);
+    Rf_error("Rlibtiledbvcf error in %s: %s", function_name, custom_message);
     return R_NilValue; /* Never reached, but keeps compiler happy */
 }
 
