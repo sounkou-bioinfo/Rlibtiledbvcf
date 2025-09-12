@@ -1,6 +1,14 @@
 # Static linking and includes for TileDBVCF (no-configure mode)
 # Use absolute paths since configure step is skipped
 
+# Detect platform and set library extension
+UNAME := $(shell uname)
+ifeq ($(UNAME),Darwin)
+  DYLIB_EXT := dylib
+else
+  DYLIB_EXT := so
+endif
+
 # Get absolute path to package directory
 PKG_ROOT := $(CURDIR)/..
 TILEDBVCF_DIR := $(PKG_ROOT)/inst/TileDBVCF
@@ -10,16 +18,24 @@ VCFPPR_INCLUDE := $(shell "${R_HOME}/bin/R" --slave --vanilla -e "cat(system.fil
 VCFPPR_LIBS := $(shell "${R_HOME}/bin/R" --slave --vanilla -e "cat(system.file('libs', package='vcfppR'))")
 
 # Check if TileDB-VCF libraries exist
-ifeq ($(wildcard $(TILEDBVCF_DIR)/lib/libtiledbvcf.so),)
-$(error TileDB-VCF libraries not found. Run ./configure first to build them.)
+ifeq ($(DYLIB_EXT),dylib)
+  TILEDBVCF_LIB := $(TILEDBVCF_DIR)/lib/libtiledbvcf.dylib
+  TILEDB_LIB := $(TILEDBVCF_DIR)/lib/libtiledb.dylib
+  HTS_LIB := $(TILEDBVCF_DIR)/lib/libhts.1.22.1.dylib
+else
+  TILEDBVCF_LIB := $(TILEDBVCF_DIR)/lib/libtiledbvcf.so
+  TILEDB_LIB := $(TILEDBVCF_DIR)/lib/libtiledb.so.2.28
+  HTS_LIB := $(TILEDBVCF_DIR)/lib/libhts.so.1.22.1
 endif
 
+ifeq ($(wildcard $(TILEDBVCF_LIB)),)
+$(error TileDB-VCF libraries not found. Run ./configure first to build them.)
+endif
 
 PKG_CPPFLAGS = -I$(TILEDBVCF_DIR)/include -I$(VCFPPR_INCLUDE)
 PKG_CFLAGS = -fPIC -I$(TILEDBVCF_DIR)/include -I$(VCFPPR_INCLUDE)
 PKG_LIBS = -L$(TILEDBVCF_DIR)/lib \
-  $(TILEDBVCF_DIR)/lib/libtiledbvcf.so $(TILEDBVCF_DIR)/lib/libtiledb.so.2.28 \
-  $(TILEDBVCF_DIR)/lib/libhts.so.1.22.1 -Wl,-rpath,'$$ORIGIN' -Wl,-rpath,'$$ORIGIN/../TileDBVCF/lib' \
+  $(TILEDBVCF_LIB) $(TILEDB_LIB) $(HTS_LIB) -Wl,-rpath,'$$ORIGIN' -Wl,-rpath,'$$ORIGIN/../TileDBVCF/lib' \
   -lz -lm -lbz2 -llzma -lcurl -ldeflate
 
 all: $(SHLIB)

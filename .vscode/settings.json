@@ -7,7 +7,8 @@
         "cgranges.h": "c",
         "rbcflib.h": "c",
         "string": "c",
-        "string_view": "c"
+        "string_view": "c",
+        "hfile_internal.h": "c"
     },
     "[r]": {
         "editor.formatOnSave": true,
