@@ -6,7 +6,8 @@ Authors@R:
 Description: Provides libtiledbvcf and TileDB-VCF CLI for R Package usage. TileDB-VCF leverages the TileDB storage
     engine to enable high-performance compression, parallel processing, and
     cloud-native capabilities for VCF (Variant Call Format) files.
-License: MIT    
+License: MIT
+LinkingTo: vcfppR
 Imports: 
     processx,
     vcfppR
