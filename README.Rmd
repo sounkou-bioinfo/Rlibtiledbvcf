@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 Minimal R bindings and CLI wrapper for [TileDB-VCF](https://github.com/TileDB-Inc/TileDB-VCF).
 
-We build the CLI and the library, provide a CLI wrapper. CLI is used for creating, ingesting, exporting, and querying TileDB-VCF datasets and library will be used for future R bindings. This is a work in progress.
+We build the CLI and the library, provide a CLI wrapper. CLI wrapped using processx is used for creating, ingesting, exporting, and querying TileDB-VCF datasets and library will be used for future R bindings. This is a work in progress.
 
 
 ## Installation

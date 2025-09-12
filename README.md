@@ -4,9 +4,24 @@
 Minimal R bindings and CLI wrapper for
 [TileDB-VCF](https://github.com/TileDB-Inc/TileDB-VCF).
 
-We build the CLI and the library, provide a CLI wrapper. CLI is used for
-creating, ingesting, exporting, and querying TileDB-VCF datasets and
-library will be used for future R bindings.
+We build the CLI and the library, provide a CLI wrapper. CLI wrapped
+using processx is used for creating, ingesting, exporting, and querying
+TileDB-VCF datasets and library will be used for future R bindings. This
+is a work in progress.
+
+## Installation
+
+This package build from source htslib among other dependencies of
+libtiledbvcf per the official cmake build instructions. This setup
+requires autoreconf and an up to date cmake sadly, so cmake, autoreconf,
+neeeds to be installed on your system(in feature we may use `BioCmake`
+package to make sure cmake is downloaded if needed). We may find the way
+to reliably use external htlib to link against but this look brittle. So
+for macOS you can use `brew install cmake autoconf automake libtool` to
+get started. For linux you can use your package manager to install these
+dependencies (they are usally installed). For windows we recommend using
+WSL2 with Ubuntu since we have no plans to configure the package for
+windows.
 
 ## Setup and Version Checking
 
@@ -34,7 +49,7 @@ tiledb_vcf_create(uri, print_command = TRUE)
 #> /usr/local/lib/R/site-library/RTileDBvcf/TileDBVCF/bin/tiledbvcf 
 #>    create 
 #>    --uri 
-#>    /tmp/RtmpYHXWYw/my_dataset 
+#>    /tmp/Rtmp6J341r/my_dataset 
 #>    --anchor-gap 
 #>    1000 
 #>    --tile-capacity 
@@ -82,9 +97,9 @@ tiledb_vcf_store(
 #> /usr/local/lib/R/site-library/RTileDBvcf/TileDBVCF/bin/tiledbvcf 
 #>    store 
 #>    --uri 
-#>    /tmp/RtmpYHXWYw/my_dataset 
+#>    /tmp/Rtmp6J341r/my_dataset 
 #>    --samples-file 
-#>    /tmp/RtmpYHXWYw/file19a24f5c525b4e.txt 
+#>    /tmp/Rtmp6J341r/file1a33192f3e2633.txt 
 #>    --threads 
 #>    4 
 #>    --total-memory-budget-mb 
