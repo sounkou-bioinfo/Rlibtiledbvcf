@@ -34,9 +34,17 @@ endif
 
 PKG_CPPFLAGS = -I$(TILEDBVCF_DIR)/include -I$(VCFPPR_INCLUDE)
 PKG_CFLAGS = -fPIC -I$(TILEDBVCF_DIR)/include -I$(VCFPPR_INCLUDE)
-PKG_LIBS = -L$(TILEDBVCF_DIR)/lib \
-  $(TILEDBVCF_LIB) $(TILEDB_LIB) $(HTS_LIB) -Wl,-rpath,'$$ORIGIN' -Wl,-rpath,'$$ORIGIN/../TileDBVCF/lib' \
-  -lz -lm -lbz2 -llzma -lcurl -ldeflate
+ifeq ($(DYLIB_EXT),dylib)
+  PKG_LIBS = -L$(TILEDBVCF_DIR)/lib \
+    $(TILEDBVCF_LIB) $(TILEDB_LIB) $(HTS_LIB) \
+    -Wl,-rpath,'@loader_path/../TileDBVCF/lib' \
+    -lz -lm -lbz2 -llzma -lcurl -ldeflate
+else
+  PKG_LIBS = -L$(TILEDBVCF_DIR)/lib \
+    $(TILEDBVCF_LIB) $(TILEDB_LIB) $(HTS_LIB) \
+    -Wl,-rpath,'$$ORIGIN' -Wl,-rpath,'$$ORIGIN/../TileDBVCF/lib' \
+    -lz -lm -lbz2 -llzma -lcurl -ldeflate
+endif
 
 all: $(SHLIB)
 
