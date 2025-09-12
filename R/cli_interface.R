@@ -32,21 +32,21 @@ NULL
 #' tiledb_vcf_cli_path()
 #' }
 tiledb_vcf_cli_path <- function() {
-    # Find the CLI binary in the package installation
-    cli_path <- system.file(
-        "TileDBVCF",
-        "bin",
-        "tiledbvcf",
-        package = "RTileDBvcf"
+  # Find the CLI binary in the package installation
+  cli_path <- system.file(
+    "TileDBVCF",
+    "bin",
+    "tiledbvcf",
+    package = "Rlibtiledbvcf"
+  )
+
+  if (!file.exists(cli_path) || cli_path == "") {
+    stop(
+      "TileDB-VCF CLI not found. Please ensure the package was installed correctly."
     )
+  }
 
-    if (!file.exists(cli_path) || cli_path == "") {
-        stop(
-            "TileDB-VCF CLI not found. Please ensure the package was installed correctly."
-        )
-    }
-
-    return(cli_path)
+  return(cli_path)
 }
 
 #' Run TileDB-VCF CLI Command
@@ -71,32 +71,32 @@ tiledb_vcf_cli_path <- function() {
 #' @keywords internal
 #' @export
 run_tiledb_vcf_cli <- function(
-    args,
-    timeout = 60,
-    echo = FALSE,
-    error_on_status = TRUE,
-    wd = ".",
-    print_command = FALSE
+  args,
+  timeout = 60,
+  echo = FALSE,
+  error_on_status = TRUE,
+  wd = ".",
+  print_command = FALSE
 ) {
-    cli_path <- tiledb_vcf_cli_path()
-    if (print_command) {
-        cat("\nRunning command:\n")
-        cat(cli_path, "\n")
-        for (a in args) {
-            cat("  ", a, "\n")
-        }
-        cat("\n")
+  cli_path <- tiledb_vcf_cli_path()
+  if (print_command) {
+    cat("\nRunning command:\n")
+    cat(cli_path, "\n")
+    for (a in args) {
+      cat("  ", a, "\n")
     }
-    result <- processx::run(
-        command = cli_path,
-        args = args,
-        timeout = timeout,
-        echo = echo,
-        error_on_status = error_on_status,
-        wd = wd
-    )
+    cat("\n")
+  }
+  result <- processx::run(
+    command = cli_path,
+    args = args,
+    timeout = timeout,
+    echo = echo,
+    error_on_status = error_on_status,
+    wd = wd
+  )
 
-    return(result)
+  return(result)
 }
 
 #' Get TileDB-VCF CLI Version
@@ -113,8 +113,8 @@ run_tiledb_vcf_cli <- function(
 #' tiledb_vcf_cli_version()
 #' }
 tiledb_vcf_cli_version <- function(echo = FALSE) {
-    result <- run_tiledb_vcf_cli(c("--version"), echo = echo)
-    return(trimws(result$stdout))
+  result <- run_tiledb_vcf_cli(c("--version"), echo = echo)
+  return(trimws(result$stdout))
 }
 
 #' Create TileDB-VCF Dataset
@@ -145,45 +145,45 @@ tiledb_vcf_cli_version <- function(echo = FALSE) {
 #'                   attributes = c("info_AF", "fmt_GT", "fmt_DP"))
 #' }
 tiledb_vcf_create <- function(
-    uri,
-    attributes = NULL,
-    vcf_attributes = NULL,
-    anchor_gap = 1000,
-    no_duplicates = FALSE,
-    tile_capacity = 10000,
-    checksum = "sha256",
-    echo = FALSE,
-    print_command = FALSE,
-    ...
+  uri,
+  attributes = NULL,
+  vcf_attributes = NULL,
+  anchor_gap = 1000,
+  no_duplicates = FALSE,
+  tile_capacity = 10000,
+  checksum = "sha256",
+  echo = FALSE,
+  print_command = FALSE,
+  ...
 ) {
-    args <- c("create", "--uri", uri)
-    if (!is.null(attributes)) {
-        args <- c(args, "--attributes", paste(attributes, collapse = ","))
-    }
-    if (!is.null(vcf_attributes)) {
-        args <- c(args, "--vcf-attributes", vcf_attributes)
-    }
-    args <- c(args, "--anchor-gap", as.character(anchor_gap))
-    args <- c(args, "--tile-capacity", as.character(tile_capacity))
-    args <- c(args, "--checksum", checksum)
-    if (no_duplicates) {
-        args <- c(args, "--no-duplicates")
-    }
-    extra_args <- list(...)
-    for (name in names(extra_args)) {
-        args <- c(
-            args,
-            paste0("--", gsub("_", "-", name)),
-            as.character(extra_args[[name]])
-        )
-    }
-    result <- run_tiledb_vcf_cli(
-        args,
-        echo = echo,
-        print_command = print_command
+  args <- c("create", "--uri", uri)
+  if (!is.null(attributes)) {
+    args <- c(args, "--attributes", paste(attributes, collapse = ","))
+  }
+  if (!is.null(vcf_attributes)) {
+    args <- c(args, "--vcf-attributes", vcf_attributes)
+  }
+  args <- c(args, "--anchor-gap", as.character(anchor_gap))
+  args <- c(args, "--tile-capacity", as.character(tile_capacity))
+  args <- c(args, "--checksum", checksum)
+  if (no_duplicates) {
+    args <- c(args, "--no-duplicates")
+  }
+  extra_args <- list(...)
+  for (name in names(extra_args)) {
+    args <- c(
+      args,
+      paste0("--", gsub("_", "-", name)),
+      as.character(extra_args[[name]])
     )
-    cat(result$stdout)
-    return(result)
+  }
+  result <- run_tiledb_vcf_cli(
+    args,
+    echo = echo,
+    print_command = print_command
+  )
+  cat(result$stdout)
+  return(result)
 }
 
 #' Store VCF Files in TileDB-VCF Dataset
@@ -217,55 +217,55 @@ tiledb_vcf_create <- function(
 #'                  threads = 8, memory_budget_mb = 4096)
 #' }
 tiledb_vcf_store <- function(
-    uri,
-    vcf_files = NULL,
-    samples_file = NULL,
-    threads = 4,
-    memory_budget_mb = 2048,
-    sample_batch_size = 10,
-    scratch_dir = NULL,
-    echo = TRUE,
-    print_command = FALSE,
-    ...
+  uri,
+  vcf_files = NULL,
+  samples_file = NULL,
+  threads = 4,
+  memory_budget_mb = 2048,
+  sample_batch_size = 10,
+  scratch_dir = NULL,
+  echo = TRUE,
+  print_command = FALSE,
+  ...
 ) {
-    args <- c("store", "--uri", uri)
+  args <- c("store", "--uri", uri)
 
-    # Add VCF files as positional arguments (no --vcf flag)
-    if (!is.null(vcf_files)) {
-        args <- c(args, vcf_files)
-    } else if (!is.null(samples_file)) {
-        args <- c(args, "--samples-file", samples_file)
-    } else {
-        stop("Either 'vcf_files' or 'samples_file' must be provided")
-    }
+  # Add VCF files as positional arguments (no --vcf flag)
+  if (!is.null(vcf_files)) {
+    args <- c(args, vcf_files)
+  } else if (!is.null(samples_file)) {
+    args <- c(args, "--samples-file", samples_file)
+  } else {
+    stop("Either 'vcf_files' or 'samples_file' must be provided")
+  }
 
-    # Add options
-    args <- c(args, "--threads", as.character(threads))
-    args <- c(args, "--total-memory-budget-mb", as.character(memory_budget_mb))
-    args <- c(args, "--sample-batch-size", as.character(sample_batch_size))
+  # Add options
+  args <- c(args, "--threads", as.character(threads))
+  args <- c(args, "--total-memory-budget-mb", as.character(memory_budget_mb))
+  args <- c(args, "--sample-batch-size", as.character(sample_batch_size))
 
-    if (!is.null(scratch_dir)) {
-        args <- c(args, "--scratch-dir", scratch_dir)
-    }
+  if (!is.null(scratch_dir)) {
+    args <- c(args, "--scratch-dir", scratch_dir)
+  }
 
-    # Add additional arguments from ...
-    extra_args <- list(...)
-    for (name in names(extra_args)) {
-        args <- c(
-            args,
-            paste0("--", gsub("_", "-", name)),
-            as.character(extra_args[[name]])
-        )
-    }
-
-    result <- run_tiledb_vcf_cli(
-        args,
-        echo = echo,
-        timeout = 3600,
-        print_command = print_command
+  # Add additional arguments from ...
+  extra_args <- list(...)
+  for (name in names(extra_args)) {
+    args <- c(
+      args,
+      paste0("--", gsub("_", "-", name)),
+      as.character(extra_args[[name]])
     )
-    cat(result$stdout)
-    return(result)
+  }
+
+  result <- run_tiledb_vcf_cli(
+    args,
+    echo = echo,
+    timeout = 3600,
+    print_command = print_command
+  )
+  cat(result$stdout)
+  return(result)
 }
 
 #' Export Data from TileDB-VCF Dataset
@@ -308,77 +308,77 @@ tiledb_vcf_store <- function(
 #'                   output_path = "variants.tsv")
 #' }
 tiledb_vcf_export <- function(
-    uri,
-    output_format = "v",
-    output_path = NULL,
-    regions = NULL,
-    regions_file = NULL,
-    sample_names = NULL,
-    samples_file = NULL,
-    tsv_fields = NULL,
-    limit = NULL,
-    merge = FALSE,
-    memory_budget_mb = 2048,
-    echo = TRUE,
-    print_command = FALSE,
-    ...
+  uri,
+  output_format = "v",
+  output_path = NULL,
+  regions = NULL,
+  regions_file = NULL,
+  sample_names = NULL,
+  samples_file = NULL,
+  tsv_fields = NULL,
+  limit = NULL,
+  merge = FALSE,
+  memory_budget_mb = 2048,
+  echo = TRUE,
+  print_command = FALSE,
+  ...
 ) {
-    args <- c("export", "--uri", uri)
+  args <- c("export", "--uri", uri)
 
-    # Output format and path
-    args <- c(args, "--output-format", output_format)
-    if (!is.null(output_path)) {
-        args <- c(args, "--output-path", output_path)
-    }
+  # Output format and path
+  args <- c(args, "--output-format", output_format)
+  if (!is.null(output_path)) {
+    args <- c(args, "--output-path", output_path)
+  }
 
-    # Regions
-    if (!is.null(regions)) {
-        args <- c(args, "--regions", paste(regions, collapse = ","))
-    } else if (!is.null(regions_file)) {
-        args <- c(args, "--regions-file", regions_file)
-    }
+  # Regions
+  if (!is.null(regions)) {
+    args <- c(args, "--regions", paste(regions, collapse = ","))
+  } else if (!is.null(regions_file)) {
+    args <- c(args, "--regions-file", regions_file)
+  }
 
-    # Samples
-    if (!is.null(sample_names)) {
-        args <- c(args, "--sample-names", paste(sample_names, collapse = ","))
-    } else if (!is.null(samples_file)) {
-        args <- c(args, "--samples-file", samples_file)
-    }
+  # Samples
+  if (!is.null(sample_names)) {
+    args <- c(args, "--sample-names", paste(sample_names, collapse = ","))
+  } else if (!is.null(samples_file)) {
+    args <- c(args, "--samples-file", samples_file)
+  }
 
-    # TSV fields
-    if (!is.null(tsv_fields)) {
-        args <- c(args, "--tsv-fields", paste(tsv_fields, collapse = ","))
-    }
+  # TSV fields
+  if (!is.null(tsv_fields)) {
+    args <- c(args, "--tsv-fields", paste(tsv_fields, collapse = ","))
+  }
 
-    # Other options
-    if (!is.null(limit)) {
-        args <- c(args, "--limit", as.character(limit))
-    }
+  # Other options
+  if (!is.null(limit)) {
+    args <- c(args, "--limit", as.character(limit))
+  }
 
-    if (merge) {
-        args <- c(args, "--merge")
-    }
+  if (merge) {
+    args <- c(args, "--merge")
+  }
 
-    args <- c(args, "--mem-budget-mb", as.character(memory_budget_mb))
+  args <- c(args, "--mem-budget-mb", as.character(memory_budget_mb))
 
-    # Add additional arguments from ...
-    extra_args <- list(...)
-    for (name in names(extra_args)) {
-        args <- c(
-            args,
-            paste0("--", gsub("_", "-", name)),
-            as.character(extra_args[[name]])
-        )
-    }
+  # Add additional arguments from ...
+  extra_args <- list(...)
+  for (name in names(extra_args)) {
+    args <- c(
+      args,
+      paste0("--", gsub("_", "-", name)),
+      as.character(extra_args[[name]])
+    )
+  }
 
-    result <- run_tiledb_vcf_cli(
-        args,
-        echo = echo,
-        timeout = 3600,
-        print_command = print_command
-    ) # 1 hour timeout
-    cat(result$stdout)
-    return(result)
+  result <- run_tiledb_vcf_cli(
+    args,
+    echo = echo,
+    timeout = 3600,
+    print_command = print_command
+  ) # 1 hour timeout
+  cat(result$stdout)
+  return(result)
 }
 
 #' List Samples in TileDB-VCF Dataset
@@ -398,20 +398,20 @@ tiledb_vcf_export <- function(
 #' print(samples)
 #' }
 tiledb_vcf_list <- function(uri, echo = FALSE, print_command = FALSE) {
-    args <- c("list", "--uri", uri)
-    result <- run_tiledb_vcf_cli(
-        args,
-        echo = echo,
-        print_command = print_command
-    )
+  args <- c("list", "--uri", uri)
+  result <- run_tiledb_vcf_cli(
+    args,
+    echo = echo,
+    print_command = print_command
+  )
 
-    # Parse output to get sample names
-    if (result$status == 0 && nchar(result$stdout) > 0) {
-        samples <- strsplit(trimws(result$stdout), "\n")[[1]]
-        return(samples)
-    } else {
-        return(character(0))
-    }
+  # Parse output to get sample names
+  if (result$status == 0 && nchar(result$stdout) > 0) {
+    samples <- strsplit(trimws(result$stdout), "\n")[[1]]
+    return(samples)
+  } else {
+    return(character(0))
+  }
 }
 
 #' Get TileDB-VCF Dataset Statistics
@@ -430,14 +430,14 @@ tiledb_vcf_list <- function(uri, echo = FALSE, print_command = FALSE) {
 #' stats <- tiledb_vcf_stat("my_dataset")
 #' }
 tiledb_vcf_stat <- function(uri, echo = TRUE, print_command = FALSE) {
-    args <- c("stat", "--uri", uri)
-    result <- run_tiledb_vcf_cli(
-        args,
-        echo = echo,
-        print_command = print_command
-    )
-    cat(result$stdout)
-    return(result)
+  args <- c("stat", "--uri", uri)
+  result <- run_tiledb_vcf_cli(
+    args,
+    echo = echo,
+    print_command = print_command
+  )
+  cat(result$stdout)
+  return(result)
 }
 
 #' Delete Samples from TileDB-VCF Dataset
@@ -458,27 +458,27 @@ tiledb_vcf_stat <- function(uri, echo = TRUE, print_command = FALSE) {
 #' tiledb_vcf_delete("my_dataset", c("sample1", "sample2"))
 #' }
 tiledb_vcf_delete <- function(
-    uri,
-    sample_names,
-    echo = TRUE,
-    print_command = FALSE
+  uri,
+  sample_names,
+  echo = TRUE,
+  print_command = FALSE
 ) {
-    if (is.null(sample_names) || length(sample_names) == 0) {
-        stop("'sample_names' must be provided and non-empty")
-    }
+  if (is.null(sample_names) || length(sample_names) == 0) {
+    stop("'sample_names' must be provided and non-empty")
+  }
 
-    args <- c(
-        "delete",
-        "--uri",
-        uri,
-        "--sample-names",
-        paste(sample_names, collapse = ",")
-    )
-    result <- run_tiledb_vcf_cli(
-        args,
-        echo = echo,
-        print_command = print_command
-    )
-    cat(result$stdout)
-    return(result)
+  args <- c(
+    "delete",
+    "--uri",
+    uri,
+    "--sample-names",
+    paste(sample_names, collapse = ",")
+  )
+  result <- run_tiledb_vcf_cli(
+    args,
+    echo = echo,
+    print_command = print_command
+  )
+  cat(result$stdout)
+  return(result)
 }
