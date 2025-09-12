@@ -1,23 +1,24 @@
 
-# RTileDBvcf
+# libtiledbvcf and TileDB-VCF CLI For R
 
 Minimal R bindings and CLI wrapper for
 [TileDB-VCF](https://github.com/TileDB-Inc/TileDB-VCF).
 
-We build the CLI and the library, provide a CLI wrapper, and begin
-building complete bindings to the TileDB VCF API and it’s HTSlib plugin.
+We build the CLI and the library, provide a CLI wrapper. CLI is used for
+creating, ingesting, exporting, and querying TileDB-VCF datasets and
+library will be used for future R bindings.
 
 ## Setup and Version Checking
 
 ``` r
-library(RTileDBvcf)
+library(Rlibtiledbvcf)
 library(vcfppR)
 tiledb_vcf_cli_version() |> cat(sep = "\n")
-#> TileDB-VCF version 
+#> TileDB-VCF version fbb00ac
 #> TileDB version 2.28.1
 #> htslib version 1.22.1
 tiledb_vcf_version() |> cat(sep = "\n")
-#> TileDB-VCF version 
+#> TileDB-VCF version 0fe1b45-modified
 #> TileDB version 2.28.1
 #> htslib version 1.22.1
 ```
@@ -33,7 +34,7 @@ tiledb_vcf_create(uri, print_command = TRUE)
 #> /usr/local/lib/R/site-library/RTileDBvcf/TileDBVCF/bin/tiledbvcf 
 #>    create 
 #>    --uri 
-#>    /tmp/RtmpPwRaPq/my_dataset 
+#>    /tmp/RtmpYHXWYw/my_dataset 
 #>    --anchor-gap 
 #>    1000 
 #>    --tile-capacity 
@@ -81,9 +82,9 @@ tiledb_vcf_store(
 #> /usr/local/lib/R/site-library/RTileDBvcf/TileDBVCF/bin/tiledbvcf 
 #>    store 
 #>    --uri 
-#>    /tmp/RtmpPwRaPq/my_dataset 
+#>    /tmp/RtmpYHXWYw/my_dataset 
 #>    --samples-file 
-#>    /tmp/RtmpPwRaPq/file16086c2e2569c7.txt 
+#>    /tmp/RtmpYHXWYw/file19a24f5c525b4e.txt 
 #>    --threads 
 #>    4 
 #>    --total-memory-budget-mb 
