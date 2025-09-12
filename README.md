@@ -6,22 +6,24 @@ Minimal R bindings and CLI wrapper for
 
 We build the CLI and the library, provide a CLI wrapper. CLI wrapped
 using processx is used for creating, ingesting, exporting, and querying
-TileDB-VCF datasets and library will be used for future R bindings. This
-is a work in progress.
+TileDB-VCF datasets and library will be used for future R bindings. We
+may add some additional functionality using vcfppR (processx callbacks
+for example). This is a work in progress.
 
 ## Installation
 
 This package build from source htslib among other dependencies of
 libtiledbvcf per the official cmake build instructions. This setup
 requires autoreconf and an up to date cmake sadly, so cmake, autoreconf,
-neeeds to be installed on your system(in feature we may use `BioCmake`
-package to make sure cmake is downloaded if needed). We may find the way
-to reliably use external htlib to link against but this look brittle. So
-for macOS you can use `brew install cmake autoconf automake libtool` to
-get started. For linux you can use your package manager to install these
-dependencies (they are usally installed). For windows we recommend using
-WSL2 with Ubuntu since we have no plans to configure the package for
-windows.
+neeeds to be installed on your system. In future we may use
+[`biocmake`](https://github.com/LTLA/biocmake/) package to make sure
+cmake is downloaded if needed. We may find the way to reliably use
+external htlib to link against but this look brittle. So for macOS you
+can use `brew install cmake autoconf automake libtool` to get started
+(as the github action of this package does it) . For linux you can use
+your package manager to install these dependencies (they are usally
+installed). For windows we recommend using WSL2 with Ubuntu since we
+have no plans to configure the package for windows.
 
 ## Setup and Version Checking
 
@@ -29,11 +31,11 @@ windows.
 library(Rlibtiledbvcf)
 library(vcfppR)
 tiledb_vcf_cli_version() |> cat(sep = "\n")
-#> TileDB-VCF version fbb00ac
+#> TileDB-VCF version 
 #> TileDB version 2.28.1
 #> htslib version 1.22.1
 tiledb_vcf_version() |> cat(sep = "\n")
-#> TileDB-VCF version 0fe1b45-modified
+#> TileDB-VCF version 
 #> TileDB version 2.28.1
 #> htslib version 1.22.1
 ```
@@ -46,10 +48,10 @@ uri <- file.path(tempdir(), "my_dataset")
 tiledb_vcf_create(uri, print_command = TRUE)
 #> 
 #> Running command:
-#> /usr/local/lib/R/site-library/RTileDBvcf/TileDBVCF/bin/tiledbvcf 
+#> /usr/local/lib/R/site-library/Rlibtiledbvcf/TileDBVCF/bin/tiledbvcf 
 #>    create 
 #>    --uri 
-#>    /tmp/Rtmp6J341r/my_dataset 
+#>    /tmp/RtmplEz2Gx/my_dataset 
 #>    --anchor-gap 
 #>    1000 
 #>    --tile-capacity 
@@ -94,12 +96,12 @@ tiledb_vcf_store(
 )
 #> 
 #> Running command:
-#> /usr/local/lib/R/site-library/RTileDBvcf/TileDBVCF/bin/tiledbvcf 
+#> /usr/local/lib/R/site-library/Rlibtiledbvcf/TileDBVCF/bin/tiledbvcf 
 #>    store 
 #>    --uri 
-#>    /tmp/Rtmp6J341r/my_dataset 
+#>    /tmp/RtmplEz2Gx/my_dataset 
 #>    --samples-file 
-#>    /tmp/Rtmp6J341r/file1a33192f3e2633.txt 
+#>    /tmp/RtmplEz2Gx/file1b77525f794e8c.txt 
 #>    --threads 
 #>    4 
 #>    --total-memory-budget-mb 
