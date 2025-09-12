@@ -6,7 +6,7 @@ NULL
 #' Rlibtiledbvcf: R Interface to TileDB-VCF
 #'
 #' @description
-#' The RTileDBvcf package provides an R interface to the TileDB-VCF library,
+#' The Rlibtiledbvcf package provides an R interface to the TileDB-VCF library,
 #' a highly performant C++ library for storing and querying genomic variant data.
 #' TileDB-VCF uses the TileDB storage engine to enable efficient compression,
 #' parallel processing, and cloud-native capabilities for VCF (Variant Call Format) data.
@@ -53,6 +53,6 @@ NULL
 #'   \item VCF Format: \url{https://samtools.github.io/hts-specs/VCFv4.3.pdf}
 #' }
 #'
-#' @name RTileDBvcf
-#' @aliases RTileDBvcf
+#' @name Rlibtiledbvcf
+#' @aliases Rlibtiledbvcf
 NULL
