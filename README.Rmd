@@ -14,12 +14,12 @@ knitr::opts_chunk$set(
 
 Minimal R bindings and CLI wrapper for [TileDB-VCF](https://github.com/TileDB-Inc/TileDB-VCF).
 
-We build the CLI and the library, provide a CLI wrapper. CLI wrapped using processx is used for creating, ingesting, exporting, and querying TileDB-VCF datasets and library will be used for future R bindings. This is a work in progress.
+We build the CLI and the library, provide a CLI wrapper. CLI wrapped using processx is used for creating, ingesting, exporting, and querying TileDB-VCF datasets and library will be used for future R bindings. We may add some additional functionality using vcfppR (processx callbacks for example). This is a work in progress.
 
 
 ## Installation
 
-This package build from source htslib among other dependencies of libtiledbvcf per the official cmake build instructions. This setup requires autoreconf and an up to date cmake sadly, so cmake, autoreconf, neeeds to be installed on your system(in feature we may use `BioCmake` package to make sure cmake is downloaded if needed). We may find the way to reliably use external htlib to link against but this look brittle. So for macOS you can use `brew install cmake autoconf automake libtool` to get started. For linux you can use your package manager to install these dependencies (they are usally installed). For windows we recommend using WSL2 with Ubuntu since we have no plans to configure the package for windows.
+This package build from source htslib among other dependencies of libtiledbvcf per the official cmake build instructions. This setup requires autoreconf and an up to date cmake sadly, so cmake, autoreconf, neeeds to be installed on your system. In future we may use [`biocmake`](https://github.com/LTLA/biocmake/) package to make sure cmake is downloaded if needed. We may find the way to reliably use external htlib to link against but this look brittle. So for macOS you can use `brew install cmake autoconf automake libtool` to get started (as the github action of this package does it) . For linux you can use your package manager to install these dependencies (they are usally installed). For windows we recommend using WSL2 with Ubuntu since we have no plans to configure the package for windows.
 
 
 ## Setup and Version Checking
