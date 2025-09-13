@@ -47,7 +47,7 @@ sample_names <- c("HG00096", "HG00097", "HG00099", "HG00100")
 sample_vcfs <- vapply(
     sample_names,
     function(s) {
-        system.file("extdata", paste0(s, ".vcf.gz"), package = "RTileDBvcf")
+        system.file("extdata", paste0(s, ".vcf.gz"), package = "Rlibtiledbvcf")
     },
     character(1)
 )

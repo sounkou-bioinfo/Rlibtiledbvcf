@@ -51,7 +51,7 @@ tiledb_vcf_create(uri, print_command = TRUE)
 #> /usr/local/lib/R/site-library/Rlibtiledbvcf/TileDBVCF/bin/tiledbvcf 
 #>    create 
 #>    --uri 
-#>    /tmp/RtmplEz2Gx/my_dataset 
+#>    /tmp/Rtmp7K4pns/my_dataset 
 #>    --anchor-gap 
 #>    1000 
 #>    --tile-capacity 
@@ -78,7 +78,7 @@ sample_names <- c("HG00096", "HG00097", "HG00099", "HG00100")
 sample_vcfs <- vapply(
     sample_names,
     function(s) {
-        system.file("extdata", paste0(s, ".vcf.gz"), package = "RTileDBvcf")
+        system.file("extdata", paste0(s, ".vcf.gz"), package = "Rlibtiledbvcf")
     },
     character(1)
 )
@@ -99,9 +99,9 @@ tiledb_vcf_store(
 #> /usr/local/lib/R/site-library/Rlibtiledbvcf/TileDBVCF/bin/tiledbvcf 
 #>    store 
 #>    --uri 
-#>    /tmp/RtmplEz2Gx/my_dataset 
+#>    /tmp/Rtmp7K4pns/my_dataset 
 #>    --samples-file 
-#>    /tmp/RtmplEz2Gx/file1b77525f794e8c.txt 
+#>    /tmp/Rtmp7K4pns/file2b50183c3579.txt 
 #>    --threads 
 #>    4 
 #>    --total-memory-budget-mb 
