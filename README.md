@@ -7,7 +7,7 @@ Minimal R bindings and CLI wrapper for
 We build the CLI and the library, provide a CLI wrapper. CLI wrapped
 using processx is used for creating, ingesting, exporting, and querying
 TileDB-VCF datasets and library will be used for future R bindings. We
-may add some additional functionality using vcfppR (processx callbacks
+may add some additional functionality using vcfppR (through callbacks
 for example). This is a work in progress.
 
 ## Installation
@@ -51,7 +51,7 @@ tiledb_vcf_create(uri, print_command = TRUE)
 #> /usr/local/lib/R/site-library/Rlibtiledbvcf/TileDBVCF/bin/tiledbvcf 
 #>    create 
 #>    --uri 
-#>    /tmp/Rtmp7K4pns/my_dataset 
+#>    /tmp/RtmpdDXyWt/my_dataset 
 #>    --anchor-gap 
 #>    1000 
 #>    --tile-capacity 
@@ -99,9 +99,9 @@ tiledb_vcf_store(
 #> /usr/local/lib/R/site-library/Rlibtiledbvcf/TileDBVCF/bin/tiledbvcf 
 #>    store 
 #>    --uri 
-#>    /tmp/Rtmp7K4pns/my_dataset 
+#>    /tmp/RtmpdDXyWt/my_dataset 
 #>    --samples-file 
-#>    /tmp/Rtmp7K4pns/file2b50183c3579.txt 
+#>    /tmp/RtmpdDXyWt/file2e5d67d8190a.txt 
 #>    --threads 
 #>    4 
 #>    --total-memory-budget-mb 
