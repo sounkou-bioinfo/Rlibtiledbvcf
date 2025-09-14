@@ -40,6 +40,127 @@ tiledb_vcf_version() |> cat(sep = "\n")
 #> htslib version 1.22.1
 ```
 
+## Cloud Access
+
+``` r
+# Set the URI for the public S3 dataset
+uri <- "s3://tiledb-inc-demo-data/tiledbvcf-arrays/v4/vcf-samples-20"
+# Set AWS region for public S3 access
+Sys.setenv(AWS_DEFAULT_REGION = "us-east-1")
+# bcf export
+export_bcf_path <- tempfile(fileext = ".bcf")
+tiledb_vcf_export(
+    uri = uri,
+    output_path = export_bcf_path,
+    regions = "chr1:1-2489564",
+    sample_names = c("v2-usVwJUmo", "v2-WpXCYApL"),
+    output_format = "b",
+    merge = TRUE,
+    echo = TRUE,
+    print_command = TRUE
+)
+#> 
+#> Running command:
+#> /usr/local/lib/R/site-library/Rlibtiledbvcf/TileDBVCF/bin/tiledbvcf 
+#>    export 
+#>    --uri 
+#>    s3://tiledb-inc-demo-data/tiledbvcf-arrays/v4/vcf-samples-20 
+#>    --output-format 
+#>    b 
+#>    --output-path 
+#>    /tmp/RtmpvNIn7S/filea24e3105e3b64.bcf 
+#>    --regions 
+#>    chr1:1-2489564 
+#>    --sample-names 
+#>    v2-usVwJUmo,v2-WpXCYApL 
+#>    --merge 
+#>    --mem-budget-mb 
+#>    2048
+#> $status
+#> [1] 0
+#> 
+#> $stdout
+#> [1] ""
+#> 
+#> $stderr
+#> [1] ""
+#> 
+#> $timeout
+#> [1] FALSE
+
+bcf_tab <- vcftable(export_bcf_path)
+str(bcf_tab)
+#> List of 10
+#>  $ samples: chr [1:2] "v2-WpXCYApL" "v2-usVwJUmo"
+#>  $ chr    : chr [1:61630] "chr1" "chr1" "chr1" "chr1" ...
+#>  $ pos    : int [1:61630] 1 10099 10100 10256 10329 10331 10334 10352 10638 10639 ...
+#>  $ id     : chr [1:61630] "." "." "." "." ...
+#>  $ ref    : chr [1:61630] "N" "A" "C" "A" ...
+#>  $ alt    : chr [1:61630] "<NON_REF>" "<NON_REF>" "<NON_REF>" "<NON_REF>" ...
+#>  $ qual   : num [1:61630] 2.14e+09 2.14e+09 2.14e+09 2.14e+09 2.14e+09 ...
+#>  $ filter : chr [1:61630] "LOWQ" "LOWQ" "LOWQ" "LOWQ" ...
+#>  $ info   : chr [1:61630] "END=10098;AN=0;AC=0" "END=10099;AN=0;AC=0" "END=10255;AN=0;AC=0" "END=10637;AN=0;AC=0" ...
+#>  $ gt     : int [1:61630, 1:2] NA NA NA NA NA NA NA NA 0 0 ...
+#>  - attr(*, "class")= chr "vcftable"
+
+# tab export
+
+export_tsv_path <- tempfile(fileext = ".tsv")
+tiledb_vcf_export(
+    uri = uri,
+    output_path = export_tsv_path,
+    sample_names = c("v2-tJjMfKyL", "v2-eBAdKwID"),
+    regions = "chr7:144000320-144008793,chr11:56490349-56491395",
+    tsv_fields = "CHR,POS,REF,S:GT",
+    output_format = "t",
+    echo = TRUE,
+    print_command = TRUE
+)
+#> 
+#> Running command:
+#> /usr/local/lib/R/site-library/Rlibtiledbvcf/TileDBVCF/bin/tiledbvcf 
+#>    export 
+#>    --uri 
+#>    s3://tiledb-inc-demo-data/tiledbvcf-arrays/v4/vcf-samples-20 
+#>    --output-format 
+#>    t 
+#>    --output-path 
+#>    /tmp/RtmpvNIn7S/filea24e3466279b.tsv 
+#>    --regions 
+#>    chr7:144000320-144008793,chr11:56490349-56491395 
+#>    --sample-names 
+#>    v2-tJjMfKyL,v2-eBAdKwID 
+#>    --tsv-fields 
+#>    CHR,POS,REF,S:GT 
+#>    --mem-budget-mb 
+#>    2048
+#> $status
+#> [1] 0
+#> 
+#> $stdout
+#> [1] ""
+#> 
+#> $stderr
+#> [1] ""
+#> 
+#> $timeout
+#> [1] FALSE
+tsv_df <- read.table(
+    export_tsv_path,
+    header = TRUE,
+    sep = "\t",
+    stringsAsFactors = FALSE
+)
+
+str(tsv_df)
+#> 'data.frame':    207 obs. of  5 variables:
+#>  $ SAMPLE: chr  "v2-eBAdKwID" "v2-tJjMfKyL" "v2-tJjMfKyL" "v2-tJjMfKyL" ...
+#>  $ CHR   : chr  "chr11" "chr11" "chr11" "chr11" ...
+#>  $ POS   : int  56490100 56490179 56490365 56490368 56490369 56490387 56490401 56490402 56490404 56490407 ...
+#>  $ REF   : chr  "C" "T" "G" "G" ...
+#>  $ S.GT  : chr  "-1,-1" "-1,-1" "0,0" "0,0" ...
+```
+
 ## Creating a TileDB-VCF Dataset
 
 ``` r
@@ -51,7 +172,7 @@ tiledb_vcf_create(uri, print_command = TRUE)
 #> /usr/local/lib/R/site-library/Rlibtiledbvcf/TileDBVCF/bin/tiledbvcf 
 #>    create 
 #>    --uri 
-#>    /tmp/RtmpdDXyWt/my_dataset 
+#>    /tmp/RtmpvNIn7S/my_dataset 
 #>    --anchor-gap 
 #>    1000 
 #>    --tile-capacity 
@@ -99,9 +220,9 @@ tiledb_vcf_store(
 #> /usr/local/lib/R/site-library/Rlibtiledbvcf/TileDBVCF/bin/tiledbvcf 
 #>    store 
 #>    --uri 
-#>    /tmp/RtmpdDXyWt/my_dataset 
+#>    /tmp/RtmpvNIn7S/my_dataset 
 #>    --samples-file 
-#>    /tmp/RtmpdDXyWt/file2e5d67d8190a.txt 
+#>    /tmp/RtmpvNIn7S/filea24e330c5a0df.txt 
 #>    --threads 
 #>    4 
 #>    --total-memory-budget-mb 
