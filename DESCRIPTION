@@ -10,7 +10,7 @@ License: MIT
 LinkingTo: vcfppR
 Depends: R (>= 4.4.3)
 Imports:  processx, vcfppR
-SystemRequirements: GNU make, cmake, autoconf, libcurl, libdeflate, libcrypto, 
+SystemRequirements: GNU make, cmake, pkg-config, autoconf, libcurl, libdeflate, libcrypto, 
     libssl, zlib, libbz2, liblzma
 Suggests:
     tinytest,

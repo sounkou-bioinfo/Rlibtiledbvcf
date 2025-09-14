@@ -31,6 +31,7 @@ SOURCE_DIR="src/libtiledbvcf"
 # Additional flags for static builds and R compatibility
 CFLAGS="-g -O2 -fvisibility=hidden -fPIC -D_FILE_OFFSET_BITS=64"
 CXXFLAGS="${CFLAGS} -std=c++20"
+libdeflate=""
 
 # Combine with R compiler flags and extracted flags from CC/CXX
 if [ -n "${CC_FLAGS}" ]; then
@@ -202,5 +203,25 @@ fi
 if [ -d "${INSTALL_DIR}/include" ]; then
   echo "Header files found in: ${INSTALL_DIR}/include/"
 fi
-
+# deflate in the src/Makevars.in to src/Makevars
+# test for libdeflate with pkg-config
+if pkg-config --exists libdeflate; then
+  libdeflate="$(pkg-config --libs libdeflate)"
+  echo "Found libdeflate: ${libdeflate}"
+else
+  echo "libdeflate not found via pkg-config, proceeding without it"
+  libdeflate=""
+fi
+# @liblzma@ 
+if pkg-config --exists liblzma; then
+  liblzma="$(pkg-config --libs liblzma)"
+  echo "Found liblzma: ${liblzma}"
+else
+  echo "liblzma not found via pkg-config, proceeding without it"
+  liblzma="-llzma"
+fi
+sed \
+-e "s|@libdeflate@|${libdeflate}|g" \
+-e "s|@liblzma@|${liblzma}|g" \
+"${PWD}/src/Makevars.in" > "${PWD}/src/Makevars"
 echo "=== Configuration completed successfully ==="
