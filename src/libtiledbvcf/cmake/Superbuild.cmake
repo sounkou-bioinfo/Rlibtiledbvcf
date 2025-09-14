@@ -57,7 +57,6 @@ set(INHERITED_CMAKE_ARGS
   -DTileDB_DIR=${TileDB_DIR}
   -DSANITIZER=${SANITIZER}
   -DOVERRIDE_INSTALL_PREFIX=${OVERRIDE_INSTALL_PREFIX}
-  -DBUILD_SHARED_LIBS=OFF
 )
 
 ############################################################

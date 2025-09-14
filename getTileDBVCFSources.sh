@@ -15,6 +15,10 @@ echo "Target directory: ${SRC_DIR}"
 # Create src directory if it doesn't exist
 mkdir -p "${SRC_DIR}"
 
+if [ -d "${SRC_DIR}/libtiledbvcf" ] ; then
+    echo "Source directory already exists: ${SRC_DIR}"
+    rm -rf "${SRC_DIR}/libtiledbvcf" || exit 1
+fi
 # Download tarball if it doesn't exist
 if [ ! -f "${SRC_DIR}/${TARBALL_FILE}" ]; then
     echo "Downloading TileDB-VCF ${VERSION} source code..."

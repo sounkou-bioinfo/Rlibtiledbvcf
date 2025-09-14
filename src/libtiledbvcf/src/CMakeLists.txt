@@ -138,19 +138,6 @@ endif()
 add_library(tiledbvcf SHARED
   $<TARGET_OBJECTS:TILEDB_VCF_OBJECTS>
 )
-
-# [PATCH] Add static library target for tiledbvcf (libtiledbvcf.a)
-add_library(tiledbvcf_static STATIC
-  $<TARGET_OBJECTS:TILEDB_VCF_OBJECTS>
-)
-set_target_properties(tiledbvcf_static PROPERTIES OUTPUT_NAME "tiledbvcf" POSITION_INDEPENDENT_CODE ON)
-target_link_libraries(tiledbvcf_static
-  PUBLIC
-    HTSlib::HTSlib
-    TileDB::tiledb_shared
-    spdlog::spdlog
-)
-
 if (WIN32)
   # tiledb_vcf_unit ref's symbols that are not explicitly part of the exported public interface.
   # Since Windows/MSVC does not make all symbols in a shared library visible,
@@ -315,7 +302,9 @@ endif()
 
 set_property(
   TARGET tiledbvcf-bin
-  PROPERTY INSTALL_RPATH "$ORIGIN/../lib"
+  PROPERTY INSTALL_RPATH
+    "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}"
+    "${CMAKE_INSTALL_PREFIX}/lib"
 )
 
 if (WIN32)
@@ -350,10 +339,4 @@ install(
   ARCHIVE DESTINATION lib
   INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tiledbvcf
-)
-
-# Ensure static library is installed
-install(
-  TARGETS tiledbvcf_static
-  ARCHIVE DESTINATION lib
 )
