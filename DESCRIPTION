@@ -1,5 +1,5 @@
 Package: Rlibtiledbvcf
-Title: `libtiledbvcf` and TileDB-VCF CLI For R
+Title: `libtiledbvcf` and TileDB-VCF CLI For `R`
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Sounkou Mahamane", family = "Toure", email = "sounkoutoure@gmail.com", role = c("aut", "cre"))
