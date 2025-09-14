@@ -8,10 +8,9 @@ Description: Provides libtiledbvcf and TileDB-VCF CLI for R Package usage. TileD
     cloud-native capabilities for VCF (Variant Call Format) files.
 License: MIT
 LinkingTo: vcfppR
-Imports: 
-    processx,
-    vcfppR
-SystemRequirements: GNU make, cmake, autoreconf, libcurl, libdeflate, libcrypto, 
+Depends: R (>= 4.4.3)
+Imports:  processx, vcfppR
+SystemRequirements: GNU make, cmake, autoconf, libcurl, libdeflate, libcrypto, 
     libssl, zlib, libbz2, liblzma
 Suggests:
     tinytest,
