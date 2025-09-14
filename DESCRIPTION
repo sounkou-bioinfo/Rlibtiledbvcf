@@ -2,7 +2,7 @@ Package: Rlibtiledbvcf
 Title: `libtiledbvcf` and TileDB-VCF CLI For R
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "Sounkou Mahamane", family = "Toure", email = "sounkalo.koutoure@example.com", role = c("aut", "cre"))
+    person(given = "Sounkou Mahamane", family = "Toure", email = "sounkoutoure@gmail.com", role = c("aut", "cre"))
 Description: Provides libtiledbvcf and TileDB-VCF CLI for R Package usage. TileDB-VCF leverages the TileDB storage
     engine to enable high-performance compression, parallel processing, and
     cloud-native capabilities for VCF (Variant Call Format) files.
