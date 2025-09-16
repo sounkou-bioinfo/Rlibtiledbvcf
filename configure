@@ -70,6 +70,29 @@ else
   HTSLIB_INCLUDE_DIR=""
   HTSLIB_LIBRARIES=""
 fi
+# deflate in the src/Makevars.in to src/Makevars
+# test for libdeflate with pkg-config
+echo "Checking for libdeflate via pkg-config..."
+if pkg-config --exists libdeflate; then
+  libdeflate="$(pkg-config --libs libdeflate)"
+  echo "Found libdeflate: ${libdeflate}"
+else
+  echo "libdeflate not found via pkg-config, proceeding without it"
+  libdeflate=""
+fi
+echo "Checking for liblzma via pkg-config..."
+# @liblzma@ 
+if pkg-config --exists liblzma; then
+  liblzma="$(pkg-config --libs liblzma)"
+  echo "Found liblzma: ${liblzma}"
+else
+  echo "liblzma not found via pkg-config, proceeding without it"
+  liblzma="-llzma"
+fi
+sed \
+-e "s|@libdeflate@|${libdeflate}|g" \
+-e "s|@liblzma@|${liblzma}|g" \
+"${PWD}/src/Makevars.in" > "${PWD}/src/Makevars"
 
 echo "Configuration:"
 echo "  CC: ${CC_BASE}"
@@ -203,25 +226,5 @@ fi
 if [ -d "${INSTALL_DIR}/include" ]; then
   echo "Header files found in: ${INSTALL_DIR}/include/"
 fi
-# deflate in the src/Makevars.in to src/Makevars
-# test for libdeflate with pkg-config
-if pkg-config --exists libdeflate; then
-  libdeflate="$(pkg-config --libs libdeflate)"
-  echo "Found libdeflate: ${libdeflate}"
-else
-  echo "libdeflate not found via pkg-config, proceeding without it"
-  libdeflate=""
-fi
-# @liblzma@ 
-if pkg-config --exists liblzma; then
-  liblzma="$(pkg-config --libs liblzma)"
-  echo "Found liblzma: ${liblzma}"
-else
-  echo "liblzma not found via pkg-config, proceeding without it"
-  liblzma="-llzma"
-fi
-sed \
--e "s|@libdeflate@|${libdeflate}|g" \
--e "s|@liblzma@|${liblzma}|g" \
-"${PWD}/src/Makevars.in" > "${PWD}/src/Makevars"
+
 echo "=== Configuration completed successfully ==="

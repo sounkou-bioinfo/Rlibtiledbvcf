@@ -81,10 +81,6 @@ tiledb_vcf_include_headers <- function() {
 #' @return A character string containing the compilation flags.
 #' @export
 #' @examples
-#' \dontrun{
-#' # Example of using tiledb_vcf_pkg_cflags in a compilation command
-#' system(paste("R CMD SHLIB -o my_program.so my_program.c", tiledb_vcf_pkg_lflags(), tiledb_vcf_pkg_cflags()))
-#' }
 tiledb_vcf_pkg_cflags <- function() {
   libs <- tiledb_vcf_library_items()
   includes <- tiledb_vcf_include_headers()
@@ -96,12 +92,6 @@ tiledb_vcf_pkg_cflags <- function() {
 #'' Returns the linking flags required to link against the TileDB-VCF library.
 #'' @return A character string containing the linking flags.
 #' @export
-#' @examples
-#' \dontrun{
-#' # Example of using tiledb_vcf_pkg_lflags in a compilation command
-#' system(paste("R CMD SHLIB -o my_program.so my_program.c", tiledb_vcf_pkg_lflags(), tiledb_vcf_pkg_cflags()))
-#' }
-#'
 tiledb_vcf_pkg_lflags <- function() {
   libs <- tiledb_vcf_library_items()
   lflags <- paste0("-L", tiledb_vcf_library_path(), " -l:", libs)
