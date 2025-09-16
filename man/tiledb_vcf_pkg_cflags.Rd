@@ -14,9 +14,3 @@ A character string containing the compilation flags.
 Get TileDB-VCF Compilation Flags
 Returns the compilation flags required to compile code that uses the TileDB-VCF library.
 }
-\examples{
-\dontrun{
-# Example of using tiledb_vcf_pkg_cflags in a compilation command
-system(paste("R CMD SHLIB -o my_program.so my_program.c", tiledb_vcf_pkg_lflags(), tiledb_vcf_pkg_cflags()))
-}
-}

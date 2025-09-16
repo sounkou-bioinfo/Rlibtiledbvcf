@@ -13,10 +13,3 @@ Get TileDB-VCF Linking Flags
 ' Returns the linking flags required to link against the TileDB-VCF library.
 ' @return A character string containing the linking flags.
 }
-\examples{
-\dontrun{
-# Example of using tiledb_vcf_pkg_lflags in a compilation command
-system(paste("R CMD SHLIB -o my_program.so my_program.c", tiledb_vcf_pkg_lflags(), tiledb_vcf_pkg_cflags()))
-}
-
-}

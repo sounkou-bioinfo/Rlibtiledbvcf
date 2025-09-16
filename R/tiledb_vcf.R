@@ -80,7 +80,6 @@ tiledb_vcf_include_headers <- function() {
 #' Returns the compilation flags required to compile code that uses the TileDB-VCF library.
 #' @return A character string containing the compilation flags.
 #' @export
-#' @examples
 tiledb_vcf_pkg_cflags <- function() {
   libs <- tiledb_vcf_library_items()
   includes <- tiledb_vcf_include_headers()
