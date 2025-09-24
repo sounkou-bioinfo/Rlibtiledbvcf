@@ -18,11 +18,10 @@ NULL
 #'   \item High-level CLI interface using processx for all TileDB-VCF operations
 #'   \item Dataset creation, VCF ingestion, and data export capabilities
 #'   \item Sample management and dataset statistics
-#'   \item Integration with the TileDB ecosystem and vcfppR for HTSLib support
 #' }
 #'
-#' The package is designed to work with pre-built TileDB-VCF libraries and
-#' integrates with the vcfppR package for HTSLib support.
+#' The package builds from source TileDB-VCF libraries including htslib, libtiledb
+#' 
 #'
 #' @section Key Functions:
 #' \describe{
@@ -42,14 +41,12 @@ NULL
 #'   \item cmake (for building TileDB-VCF)
 #'   \item wget or curl (for downloading sources)
 #'   \item C++17 compatible compiler
-#'   \item vcfppR package (for HTSLib integration)
 #' }
 #'
-#' @author Sounkalo Koutoure
+#' @author Sounkou Mahamane Toure
 #' @references
 #' \itemize{
 #'   \item TileDB-VCF: \url{https://github.com/TileDB-Inc/TileDB-VCF}
-#'   \item TileDB: \url{https://tiledb.com/}
 #'   \item VCF Format: \url{https://samtools.github.io/hts-specs/VCFv4.3.pdf}
 #' }
 #'
