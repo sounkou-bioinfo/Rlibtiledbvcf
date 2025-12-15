@@ -3,7 +3,7 @@
  *
  * The MIT License
  *
- * @copyright Copyright (c) 2017-2018 TileDB, Inc.
+ * @copyright Copyright (c) 2017-2025 TileDB, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -111,33 +111,6 @@ void trim(std::string* s) {
     s->pop_back();
   while (s->size() && isspace(s->front()))
     s->erase(s->begin());
-}
-
-void normalize_uri(std::string& uri, bool is_dir) {
-  if (is_dir) {
-    if (uri.back() != '/')
-      uri.push_back('/');
-  } else {
-    if (uri.back() == '/')
-      uri.pop_back();
-  }
-}
-
-std::string uri_filename(const std::string& uri) {
-  if (ends_with(uri, "/"))
-    return "";
-  auto path_parts = split(uri, "/");
-  assert(!path_parts.empty());
-  return path_parts.back();
-}
-
-std::string uri_join(
-    const std::string& dir, const std::string& filename, const char delimiter) {
-  std::string result = dir;
-  if (!ends_with(result, std::string(1, delimiter)) && !result.empty())
-    result += delimiter;
-  result += filename;
-  return result;
 }
 
 bool download_file(
@@ -539,19 +512,6 @@ bool compare_configs(const tiledb::Config& rhs, const tiledb::Config& lhs) {
   return true;
 }
 
-bool is_local_uri(const std::string& uri) {
-  if (starts_with(uri, "s3://"))
-    return false;
-  if (starts_with(uri, "azure://"))
-    return false;
-  if (starts_with(uri, "gcs://"))
-    return false;
-  if (starts_with(uri, "hdfs://"))
-    return false;
-
-  return true;
-}
-
 static std::mutex version_creation_mtx_;
 const std::string& version_info() {
   std::unique_lock<std::mutex> lck(version_creation_mtx_);
@@ -639,6 +599,15 @@ std::string temp_filename(const std::string& extension) {
   std::filesystem::path path =
       std::filesystem::temp_directory_path() / filename.str();
   return path.string();
+}
+
+bool has_member(const tiledb::Group& group, const std::string& member) {
+  try {
+    group.member(member);
+  } catch (const TileDBError& e) {
+    return false;
+  }
+  return true;
 }
 
 }  // namespace utils

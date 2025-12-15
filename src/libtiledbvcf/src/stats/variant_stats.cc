@@ -3,7 +3,7 @@
  *
  * The MIT License
  *
- * @copyright Copyright (c) 2022 TileDB, Inc.
+ * @copyright Copyright (c) 2022-2025 TileDB, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,13 @@
  * THE SOFTWARE.
  */
 
-#include "variant_stats.h"
 #include <algorithm>
 #include <stdexcept>
+
 #include "utils/logger_public.h"
 #include "utils/normalize.h"
 #include "utils/utils.h"
+#include "variant_stats.h"
 #include "vcf/htslib_value.h"
 #include "vcf/vcf_utils.h"
 
@@ -50,15 +51,6 @@ void VariantStats::set_array_version(uint32_t version) {
     throw std::out_of_range(
         "invalid variant stats version specified for writer");
   array_version_ = version;
-}
-
-std::string VariantStats::get_uri(const Group& group) {
-  try {
-    auto member = group.member(VARIANT_STATS_ARRAY);
-    return member.uri();
-  } catch (const tiledb::TileDBError& ex) {
-    return "";
-  }
 }
 
 void VariantStats::create(
@@ -158,29 +150,32 @@ void VariantStats::create(
   }
 
   // Create array
-  auto uri = get_uri(root_uri);
+  auto uri = VariantStats::root_uri(root_uri);
   Array::create(uri, schema);
 
   // Write metadata
   Array array(ctx, uri, TILEDB_WRITE);
   array.put_metadata("version", TILEDB_UINT32, 1, &array_version_);
 
-  // Add array to root group
-  // Group assests use full paths for tiledb cloud, relative paths otherwise
-  auto relative = !utils::starts_with(root_uri, "tiledb://");
-  auto array_uri = get_uri(root_uri, relative);
-  LOG_DEBUG("Adding array '{}' to group '{}'", array_uri, root_uri);
-  Group root_group(ctx, root_uri, TILEDB_WRITE);
-  root_group.add_member(array_uri, relative, VARIANT_STATS_ARRAY);
+  if (ctx.data_protocol(root_uri) == tiledb::Context::DataProtocol::v2) {
+    // Add array to root group
+    // Group assests use full paths for tiledb cloud, relative paths otherwise
+    auto relative = !utils::starts_with(root_uri, "tiledb://");
+    auto array_uri = VariantStats::root_uri(root_uri, relative);
+    LOG_DEBUG("Adding array '{}' to group '{}'", array_uri, root_uri);
+    Group root_group(ctx, root_uri, TILEDB_WRITE);
+
+    root_group.add_member(array_uri, relative, VARIANT_STATS_ARRAY);
+  }
 }
 
 bool VariantStats::exists(const Group& group) {
-  auto uri = get_uri(group);
+  auto uri = VariantStats::group_uri(group);
   return !uri.empty();
 }
 
 void VariantStats::init(std::shared_ptr<Context> ctx, const Group& group) {
-  auto uri = get_uri(group);
+  auto uri = VariantStats::group_uri(group);
 
   if (uri.empty()) {
     LOG_DEBUG("[VariantStats] Ingestion task disabled");
@@ -316,7 +311,7 @@ void VariantStats::close() {
 
 void VariantStats::consolidate_commits(
     std::shared_ptr<Context> ctx, const Group& group) {
-  auto uri = get_uri(group);
+  auto uri = VariantStats::group_uri(group);
 
   // Return if the array does not exist
   if (uri.empty()) {
@@ -330,7 +325,7 @@ void VariantStats::consolidate_commits(
 
 void VariantStats::consolidate_fragment_metadata(
     std::shared_ptr<Context> ctx, const Group& group) {
-  auto uri = get_uri(group);
+  auto uri = VariantStats::group_uri(group);
 
   // Return if the array does not exist
   if (uri.empty()) {
@@ -344,7 +339,7 @@ void VariantStats::consolidate_fragment_metadata(
 
 void VariantStats::vacuum_commits(
     std::shared_ptr<Context> ctx, const Group& group) {
-  auto uri = get_uri(group);
+  auto uri = VariantStats::group_uri(group);
 
   // Return if the array does not exist
   if (uri.empty()) {
@@ -358,7 +353,7 @@ void VariantStats::vacuum_commits(
 
 void VariantStats::vacuum_fragment_metadata(
     std::shared_ptr<Context> ctx, const Group& group) {
-  auto uri = get_uri(group);
+  auto uri = VariantStats::group_uri(group);
 
   // Return if the array does not exist
   if (uri.empty()) {
@@ -812,11 +807,6 @@ inline void VariantStats::process_v2(
 //===================================================================
 //= private functions
 //===================================================================
-
-std::string VariantStats::get_uri(const std::string& root_uri, bool relative) {
-  auto root = relative ? "" : root_uri;
-  return utils::uri_join(root, VARIANT_STATS_ARRAY);
-}
 
 void VariantStats::update_results() {
   if (values_.size() > 0) {

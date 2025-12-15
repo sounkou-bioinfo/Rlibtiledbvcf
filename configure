@@ -155,6 +155,8 @@ if ! command -v cmake >/dev/null 2>&1; then
   echo "cmake not found, please install cmake"
   exit 1
 fi
+echo "cmake found: $(command -v cmake)"
+cmake --version
 
 # Clean previous builds
 echo "Cleaning previous builds..."

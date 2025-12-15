@@ -3,7 +3,7 @@
 set -eux
 
 # Configuration
-VERSION="0.38.2"
+VERSION="0.40.0"
 TARBALL_FILE="${VERSION}.tar.gz"
 TARBALL_URL="https://github.com/TileDB-Inc/TileDB-VCF/archive/refs/tags/${TARBALL_FILE}"
 SRC_DIR="src"
